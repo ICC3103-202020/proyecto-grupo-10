@@ -43,11 +43,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Game\Game.cs" />
+    <Compile Include="Classes\Game\Map\Assets\Farm.cs" />
+    <Compile Include="Classes\Game\Map\Assets\Lake.cs" />
+    <Compile Include="Classes\Game\Map\Assets\River.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Blocks\Block.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Blocks\Earth.cs" />
+    <Compile Include="Classes\Game\Map\Map.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Build.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Land.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Production.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Product\Animal.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Product\Consumable.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Product\FinalProduct.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Product\Product.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Product\Seed.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Productions\Ranch.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Builds\Storage.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Terrain.cs" />
+    <Compile Include="Classes\Game\Map\Terrains\Blocks\Water.cs" />
+    <Compile Include="Classes\Game\Market.cs" />
+    <Compile Include="Classes\Menu\MenuManager.cs" />
+    <Compile Include="Classes\Printer\Print.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
