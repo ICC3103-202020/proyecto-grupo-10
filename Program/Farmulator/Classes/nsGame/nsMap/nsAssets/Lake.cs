@@ -10,12 +10,20 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
     {
         private List<int[]> positions;
 
+        //CONSTRUCTOR
         public Lake()
         {
             this.positions = new List<int[]>();
             GenerateLake();
         }
 
+        //ACCESO
+        public List<int[]> GetPositions()
+        {
+            return this.positions;
+        }
+
+        //METODOS
         public void GenerateLake()
         {
             this.positions.Clear();
@@ -54,6 +62,8 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
                     continue;
                 }
             }
+
+            return;
         }
     }
 }

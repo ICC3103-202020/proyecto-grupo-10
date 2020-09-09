@@ -13,6 +13,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
         private Block[,] blocks;
         private Build build;
 
+        //CONSTRUCTOR
         public Terrain()
         {
             this.blocks = new Block[10, 10];
@@ -20,6 +21,13 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
 
         }
 
+        //ACCESOS
+        public Block[,] GetBlocks()
+        {
+            return this.blocks;
+        }
+
+        //METODOS DE TERRAIN
         public void GenerateBlocks()
         {
             for (int i = 0; i < 10; i++)

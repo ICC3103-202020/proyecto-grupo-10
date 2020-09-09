@@ -1,4 +1,4 @@
-﻿using Farmulator.Classes.Menu;
+﻿using Farmulator.Classes.nsMenu;
 using System;
 using System.Collections.Generic;
 using System.Linq;

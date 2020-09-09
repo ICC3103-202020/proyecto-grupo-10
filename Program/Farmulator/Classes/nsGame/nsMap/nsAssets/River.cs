@@ -12,6 +12,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
         private List<int[]> positions;
         private bool direction;
 
+        //CONSTRUCTOR
         public River()
         {
             this.positions = new List<int[]>();
@@ -20,6 +21,18 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
             GenerateRiver();
         }
 
+        //ACCESOS
+        public List<int[]> GetPositions()
+        {
+            return this.positions;
+        }
+
+        public bool GetDirection()
+        {
+            return this.direction;
+        }
+
+        //METODOS
         public void GenerateRiver()
         {
             this.positions.Clear();

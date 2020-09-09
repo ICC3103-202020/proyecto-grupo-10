@@ -16,6 +16,7 @@ namespace Farmulator.Classes.nsGame
         private DateTime creationDate;
         private DateTime saveDate;
 
+        //CONSTRUCTOR
         public Game()
         {
             this.turn = 1;
@@ -25,6 +26,34 @@ namespace Farmulator.Classes.nsGame
             this.creationDate = DateTime.Now;
             this.saveDate = DateTime.Now;
         }
+
+        //ACCESO
+        public int GetTurn()
+        {
+            return this.turn;
+        }
+        public int GetMoney()
+        {
+            return this.money;
+        }
+        public Map GetMap()
+        {
+            return this.map;
+        }
+        public Market GetMarket()
+        {
+            return this.market;
+        }
+        public DateTime GetCreationDate()
+        {
+            return this.creationDate;
+        }
+        public DateTime GetSaveDate()
+        {
+            return this.saveDate;
+        }
+
+        //METODOS
         public bool SaveGame()
         {
             return true;
