@@ -63,6 +63,9 @@
     <Compile Include="Classes\nsGame\nsMap\nsTerrains\Terrain.cs" />
     <Compile Include="Classes\nsGame\nsMap\nsTerrains\nsBlocks\Water.cs" />
     <Compile Include="Classes\nsGame\nsMarket\Market.cs" />
+    <Compile Include="Classes\nsGame\nsMarket\PriceConsumable.cs" />
+    <Compile Include="Classes\nsGame\nsMarket\PriceProduct.cs" />
+    <Compile Include="Classes\nsGame\nsMarket\PriceTerrain.cs" />
     <Compile Include="Classes\nsMenu\MenuManager.cs" />
     <Compile Include="Classes\nsPrinter\Print.cs" />
     <Compile Include="Program.cs" />
