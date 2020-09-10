@@ -8,9 +8,18 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks
 {
     class Water:Block
     {
+        //CONSTRUCTOR
         public Water()
         {
             this.workable = false;
         }
+
+        //ACCESO
+        public bool GetWorkable()
+        {
+            return this.workable;
+        }
+
+        //METODOS
     }
 }

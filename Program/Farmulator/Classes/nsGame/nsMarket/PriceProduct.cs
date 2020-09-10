@@ -10,13 +10,17 @@ namespace Farmulator.Classes.nsGame.nsMarket
     class PriceProduct
     {
         private Product product;
-        private List<int> prices;
+        private int initialPrice;
+        private int maxPriceVariation;
+        private List<int> pricesHistory;
 
         //CONSTRUCTOR
-        public PriceProduct(Product product)
+        public PriceProduct(Product product, int initialPrice, int maxPriceVariation)
         {
             this.product = product;
-
+            this.initialPrice = initialPrice;
+            this.maxPriceVariation = maxPriceVariation;
+            this.pricesHistory = new List<int>();
         }
 
         //ACCESO
@@ -24,9 +28,25 @@ namespace Farmulator.Classes.nsGame.nsMarket
         {
             return this.product;
         }
-        public List<int> GetPrices()
+        public List<int> GetPricesHistory()
         {
-            return this.prices;
+            return this.pricesHistory;
+        }
+
+        public int GetInitialPrice()
+        {
+            return this.initialPrice;
+        }
+
+        public int GetMaxPriceVariation()
+        {
+            return this.maxPriceVariation;
+        }
+
+        //METODOS
+        public void AddPrice(int price)
+        {
+            this.pricesHistory.Add(price);
         }
     }
 }

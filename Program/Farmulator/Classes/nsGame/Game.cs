@@ -26,6 +26,7 @@ namespace Farmulator.Classes.nsGame
             this.market = new Market();
             this.creationDate = DateTime.Now;
             this.saveDate = DateTime.Now;
+            
         }
 
         //ACCESO
@@ -55,6 +56,10 @@ namespace Farmulator.Classes.nsGame
         }
 
         //METODOS
+        public void NextTurn()
+        {
+            //METODO QUE MANEJARA EL AVANCE DE TURNOS
+        }
         public bool SaveGame()
         {
             return true;

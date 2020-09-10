@@ -8,5 +8,27 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsPr
 {
     class FinalProduct
     {
+        private Product product;
+        private int quality;
+
+        //CONSTRUCTOR
+        public FinalProduct(Product product, int quality)
+        {
+            this.product = product;
+            this.quality = quality;
+        }
+
+        //ACCESO
+        public Product GetProduct()
+        {
+            return this.product;
+        }
+
+        public int GetQuality()
+        {
+            return this.quality;
+        }
+
+        //METODOS
     }
 }
