@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Farmulator.Classes.nsGame
+namespace Farmulator.Classes.nsGame.nsMarket
 {
     class Market
     {
+        
     }
 }

@@ -30,6 +30,7 @@ namespace Farmulator.Classes.nsPrinter
                 if(possibleOptions.Contains(optionSelect))
                 {
                     int optionNumber = Int32.Parse(optionSelect);
+                    Console.Clear();
                     return optionNumber;
                 }
                 else
@@ -41,30 +42,47 @@ namespace Farmulator.Classes.nsPrinter
 
         public static void RenderMap(Map map)
         {
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
-                for (int j = 0; j < 10; j++)
-                {
-                    Console.WriteLine();
+                Console.WriteLine();
 
-                    for (int x = 0; x < 10; x++)
+                for (int j = 0; j < 100; j++)
+                {                    
+                    if (map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Water)))
                     {
-                        for (int z = 0; z < 10; z++)
+                        if (map.GetFarm().GetTerrains().Contains(map.GetTerrains()[i / 10, j / 10]))
                         {
-                            if (map.GetTerrains()[x, j].GetBlocks()[i, z].GetType().Equals(typeof(Water)))
-                            {
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.Write("██");
-                            }
-                            if (map.GetTerrains()[x, j].GetBlocks()[i, z].GetType().Equals(typeof(Earth)))
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write("██");
-                            }
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.Write("▒▒");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write("██");
                         }
                     }
+                    if (map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Earth)))
+                    {
+                        if (map.GetFarm().GetTerrains().Contains(map.GetTerrains()[i / 10, j / 10]))
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            Console.Write("▒▒");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write("██");
+                        }
+                    }
+                    
                 }
             }
+            Console.ForegroundColor = ConsoleColor.White;
+            return;
         }
     }
 }

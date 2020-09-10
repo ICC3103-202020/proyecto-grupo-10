@@ -23,6 +23,7 @@ namespace Farmulator.Classes.nsGame.nsMap
             this.terrains = new Terrain[10, 10];
             GenerateTerrains();
             this.farm = new Farm();
+            this.farm.GenerateFarm(this.terrains);
             this.lake = null;
             this.river = null;
         }
@@ -49,28 +50,54 @@ namespace Farmulator.Classes.nsGame.nsMap
         }
 
         //METODOS
-        public void GenerateMap(bool lake, bool river)
+        public void GenerateMap(int lake, int river,int farm)
         {
-            //RESETEAMOS EL MAPA
+            //RESETEAMOS MAPA
             ResetMap();
-            this.lake = null;
-            this.river = null;
 
-            //GENERAMOS RIOS Y/O LAGOS
-            if (lake == true)
+            if(lake == 0)
             {
+                this.lake = null;
+            }
+            
+            if(river == 0)
+            {
+                this.river = null;
+            }
+
+            if(lake == 1)
+            {
+                this.lake = null;
                 this.lake = new Lake();
                 this.lake.GenerateLake();
                 InsertAssets(this.lake.GetPositions());
+
             }
-            if (river == true)
+
+            if(river == 1)
             {
+                this.river = null;
                 this.river = new River();
                 this.river.GenerateRiver();
                 InsertAssets(this.river.GetPositions(), this.river.GetDirection());
+
             }
 
-            this.farm.GenerateFarm(this.terrains);
+            if(farm == 1)
+            {
+                this.farm.GetTerrains().Clear();
+                this.farm.GenerateFarm(this.terrains);
+            }
+
+            if (lake == 2 && this.lake != null)
+            {
+                InsertAssets(this.lake.GetPositions());
+            }
+
+            if(river == 2 && this.river != null)
+            {
+                InsertAssets(this.river.GetPositions(), this.river.GetDirection());
+            }
 
             return;
 

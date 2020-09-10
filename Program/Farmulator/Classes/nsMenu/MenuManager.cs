@@ -50,17 +50,29 @@ namespace Farmulator.Classes.nsMenu
 
                 string titleNewGame = "";
 
-                List<string> optionsNewGame = new List<string>() { "Solo Lago", "Solo Rio", "Rio y Lago", "Solo Tierra" };
+                List<string> optionsNewGame = new List<string>() { "Generar Lago", "Generar Rio", "Generar Granja", "Eliminar Lago", "Eliminar Rio", "Seleccionar Mapa" };
 
                 int optionSelect = Print.RenderMenu(optionsNewGame, titleNewGame);
 
                 switch (optionSelect)
                 {
                     case 1:
-                        game.GetMap().GenerateMap(true,false);
+                        game.GetMap().GenerateMap( 1, 2, 2);
                         break;
                     case 2:
-                        game.GetMap().GenerateMap(false, true);
+                        game.GetMap().GenerateMap( 2, 1, 2);
+                        break;
+                    case 3:
+                        game.GetMap().GenerateMap( 2, 2, 1);
+                        break;
+                    case 4:
+                        game.GetMap().GenerateMap( 0, 2, 2);
+                        break;
+                    case 5:
+                        game.GetMap().GenerateMap( 2, 0, 2);
+                        break;
+                    case 6:
+                        GameMenu();
                         break;
                 }
             }
@@ -72,6 +84,11 @@ namespace Farmulator.Classes.nsMenu
         }
 
         private static void OptionsMenu()
+        {
+
+        }
+
+        private static void GameMenu()
         {
 
         }

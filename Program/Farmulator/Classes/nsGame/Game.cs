@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Farmulator.Classes.nsGame.nsMap;
+using Farmulator.Classes.nsGame.nsMarket;
 
 namespace Farmulator.Classes.nsGame
 {
@@ -20,7 +21,7 @@ namespace Farmulator.Classes.nsGame
         public Game()
         {
             this.turn = 1;
-            this.money = 123456789;
+            this.money = 50000;
             this.map = new Map();
             this.market = new Market();
             this.creationDate = DateTime.Now;

@@ -39,7 +39,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
             Random rnd = new Random();
 
             //GENERAMOS LA DIRECCION QUE ESTARA EL RIO
-            int direction = rnd.Next(1);
+            int direction = rnd.Next(2);
 
             if(direction == 1)
             {
