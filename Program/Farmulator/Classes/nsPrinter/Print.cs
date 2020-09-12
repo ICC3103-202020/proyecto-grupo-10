@@ -11,34 +11,52 @@ namespace Farmulator.Classes.nsPrinter
 {
     static class Print
     {
-        public static int RenderMenu(List<string> options, string title)
+        public static int RenderMenu(List<string> options, string title, bool subMenu = false)
         {
             Console.WriteLine(title);
             List<string> possibleOptions = new List<string>();
             
             for(int i = 0; i < options.Count; i++)
             {
-                Console.WriteLine((i+1) + " - " + options[i]);
+                int optionlength = options[i].Length + 4;
+
+                int lengthBackground = 100 - (optionlength / 2);
+                string leftBackground = new string(' ',lengthBackground);
+
+                Console.Write(leftBackground);
+                Console.Write((i + 1) + " - " + options[i] + "\n");
+
                 possibleOptions.Add((i+1).ToString());
             }
 
             while (true)
             {
-                Console.WriteLine("Ingrese la opcion deseada:");
+                string leftTab = new string(' ', 87);
+                Console.WriteLine("\n" + leftTab + "Ingrese la opcion deseada:");
+
                 string optionSelect = Console.ReadLine();
 
-                if(possibleOptions.Contains(optionSelect))
+                if (possibleOptions.Contains(optionSelect))
                 {
                     int optionNumber = Int32.Parse(optionSelect);
-                    Console.Clear();
-                    return optionNumber;
+
+                    if(subMenu == false)
+                    {
+                        Console.Clear();
+                        return optionNumber;
+                    }
+                    else
+                    {
+                        return optionNumber;
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Ingrese una opcion valida");
+                    Console.WriteLine(leftTab + "Ingrese una opcion valida");
                 }
             }
         }
+
 
         public static void RenderMap(Map map)
         {
