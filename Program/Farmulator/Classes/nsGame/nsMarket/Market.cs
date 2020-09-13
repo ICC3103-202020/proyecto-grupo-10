@@ -20,24 +20,51 @@ namespace Farmulator.Classes.nsGame.nsMarket
             this.pricesProducts = new List<PriceProduct>();
             this.pricesConsumables = new List<PriceConsumable>();
             this.pricesTerrains = new List<PriceTerrain>();
-            NewMarket();
         }
 
         //ACCESO
+        public List<PriceProduct> GetPricesProducts()
+        {
+            return this.pricesProducts;
+        }
+
+        public List<PriceConsumable> GetPricesConsumables()
+        {
+            return this.pricesConsumables;
+        }
+
+        public List<PriceTerrain> GetPricesTerrains()
+        {
+            return this.pricesTerrains;
+        }
 
         //METODOS
-        private void NewMarket()
+        public void PriceMarket(List<Product> products)
         {
-            //BUSCARA Y ABRIRA LOS DATOS DE UN NUEVO JUEGO SERIALIZADO
+            //INSTANCIAMOS TODOS LOS PRODUCTOS QUE ABRAN EN EL JUEGO JUNTO A SUS PRECIOS
+            
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                PriceProduct nameProduct = new PriceProduct(products[i], 250, 120);
+                pricesProducts.Add(nameProduct);
+            }
+
+            CalculatePricesProducts(0);
+
+            //MAS ADELANTE BUSCARA Y ABRIRA LOS DATOS DE UN NUEVO MERCADO SERIALIZADO
         }
 
         private void CalculatePricesProducts(int turn)
         {
             if(turn == 0)
             {
+                Random rnd = new Random();
+
                 for (int i = 0; i < this.pricesProducts.Count; i++)
                 {
-                    if (this.pricesProducts[i].GetProduct().Equals(typeof(Seed)))
+
+                    if (this.pricesProducts[i].GetProduct().GetType() == typeof(Seed))
                     {
                         Seed seed = (Seed)this.pricesProducts[i].GetProduct();
 
@@ -46,20 +73,20 @@ namespace Farmulator.Classes.nsGame.nsMarket
                         int variationPrice = seed.GetPriceVariation();
 
                         int j = 0;
-                        Random rnd = new Random();
+                        
                         int priceTurn = initialPrice;
 
                         while (j < 30)
                         {
-                            int variation = rnd.Next(3);
+                            int variation = rnd.Next(0,6);
 
-                            if (variation == 0)
+                            if (variation == 0 || variation == 5)
                             {
                                 this.pricesProducts[i].AddPrice(priceTurn);
                                 j++;
                             }
 
-                            if (variation == 1)
+                            if (variation == 1 || variation == 4)
                             {
                                 int price = priceTurn + variationPrice;
 
@@ -75,7 +102,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
                                 }
                             }
 
-                            if (variation == 2)
+                            if (variation == 2 || variation == 3)
                             {
                                 int price = priceTurn - variationPrice;
 

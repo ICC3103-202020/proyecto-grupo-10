@@ -18,7 +18,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsPr
         private int priceVariation;
 
         //CONSTRUCTOR
-        public Seed(string name, int waterConsumption, int minWater, int waterPenalty, int timeProduction, int diseaseProbability, int diseasePenalty)
+        public Seed(string name, int waterConsumption, int minWater, int waterPenalty, int timeProduction, int diseaseProbability, int diseasePenalty, int nutrientsConsumption, int minNutrients, int nutrientsPenalty, int wormsProbability, int wormsPenalty, int undergrowthProbability, int undergrowthPenalty, int priceVariation)
         {
             this.name = name;
             this.waterConsumption = waterConsumption;
@@ -27,11 +27,53 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsPr
             this.timeProduction = timeProduction;
             this.diseaseProbability = diseaseProbability;
             this.diseasePenalty = diseasePenalty;
+            this.nutrientsConsumption = nutrientsConsumption;
+            this.minNutrients = minNutrients;
+            this.nutrientsPenalty = nutrientsPenalty;
+            this.wormsProbability = wormsProbability;
+            this.wormsPenalty = wormsPenalty;
+            this.undergrowthProbability = undergrowthProbability;
+            this.undergrowthPenalty = undergrowthPenalty;
+            this.priceVariation = priceVariation;
 
-            //FALTA AGREGAR LOS ATRIBUTOS UNICOS DE SEED
         }
 
         //ACCESO
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        public int GetWaterConsumption()
+        {
+            return this.waterConsumption;
+        }
+
+        public int GetMinWater()
+        {
+            return this.minWater;
+        }
+
+        public int GetWaterPenalty()
+        {
+            return this.waterPenalty;
+        }
+
+        public int GetTimeProduction()
+        {
+            return this.timeProduction;
+        }
+
+        public int GetDiseaseProbability()
+        {
+            return this.diseaseProbability;
+        }
+
+        public int GetDiseasePenalty()
+        {
+            return this.diseasePenalty;
+        }
+
         public int GetNutrientsConsumption()
         {
             return this.nutrientsConsumption;

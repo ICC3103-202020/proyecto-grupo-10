@@ -188,6 +188,8 @@ namespace Farmulator.Classes.nsMenu
                     case 4:
 
                         break;
+                    case 5:
+                        return;
                 }
 
                 game.NextTurn();
@@ -212,32 +214,72 @@ namespace Farmulator.Classes.nsMenu
                 titleGameMenu = titleGameMenu + stringTurn[i] + numbers[turn / 10][i] + numbers[turn % 10][i] + marketMenu[i] + stringMoney[i] + numbers[money / 100000][i] + numbers[(money / 10000) % 10][i] + numbers[(money / 1000) % 10][i] + numbers[(money / 100) % 10][i] + numbers[(money / 10) % 10][i] + numbers[money % 10][i] + "\n";
             }
 
-            int optionSelect = Print.RenderMenu(optionsMarketMenu, titleGameMenu, true);
 
-            switch (optionSelect)
+            while (true)
             {
-                case 1:
+                int optionSelect = Print.RenderMenu(optionsMarketMenu, titleGameMenu, true);
 
-                    string subTitle = "\n\n\n" +
-                                      "                                                                                 ▄▄▄  ▄  ▄ ▄ ▄   ▄▄▄  ▄ ▄   ▄ ▄▄▄▄  ▄▄▄\n" +
-                                      "                                                                                 █▄▄▀ █  █ █ █   █  █ █ █▀▄ █ █ ▄▄ ▀▄▄ \n" +
-                                      "                                                                                 █▄▄▀ ▀▄▄▀ █ █▄▄ █▄▄▀ █ █  ▀█ █▄▄█ ▄▄▄▀\n";
+                switch (optionSelect)
+                {
+                    case 1:
 
-                    List<string> optionsMarketBuldings = new List<string>() { "Comprar una plantacion", "Comprar ganado", "Comprar Almacenamiento", "Vender/Destruir edificacion" , "Volver al mercado"};
 
-                    int optionSelectSubMenu = Print.RenderMenu(optionsMarketBuldings, subTitle, true);
-                    break;
 
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
+
+
+                        //MERCADO DE EDIFICACIONES-------------------------------------------------------------------------------------------------------------------------
+
+                        string subTitle = "\n\n\n" +
+                                          "                                                                                 ▄▄▄  ▄  ▄ ▄ ▄   ▄▄▄  ▄ ▄   ▄ ▄▄▄▄  ▄▄▄\n" +
+                                          "                                                                                 █▄▄▀ █  █ █ █   █  █ █ █▀▄ █ █ ▄▄ ▀▄▄ \n" +
+                                          "                                                                                 █▄▄▀ ▀▄▄▀ █ █▄▄ █▄▄▀ █ █  ▀█ █▄▄█ ▄▄▄▀\n";
+
+                        List<string> optionsMarketBuldings = new List<string>() { "Comprar una plantacion", "Comprar ganado", "Comprar Almacenamiento", "Vender/Destruir edificacion", "Volver al mercado" };
+
+                        int optionSelectSubMenu = Print.RenderMenu(optionsMarketBuldings, subTitle, true);
+
+                        switch (optionSelectSubMenu)
+                        {
+                            case 1:
+
+                                Print.RenderMarket(game.GetMarket(), game.GetMap(), optionSelect, optionSelectSubMenu);
+
+                                return;
+                            case 2:
+                                return;
+                            case 3:
+                                return;
+                            case 4:
+                                return;
+                            case 5:
+                                break;
+                        }
+
+
+                        break;
+
+
+
+
+
+
+
+                    case 2:
+
+
+
+
+                        //MERCADO DE CONSUMIBLES--------------------------------------------------------------------------------------------------------------------------------------
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                }
             }
-
+            
         }
 
     }

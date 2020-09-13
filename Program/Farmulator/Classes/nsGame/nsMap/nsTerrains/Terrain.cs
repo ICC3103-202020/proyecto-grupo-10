@@ -17,6 +17,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
         public Terrain()
         {
             this.blocks = new Block[10, 10];
+            this.build = null;
             GenerateBlocks();
 
         }
@@ -25,6 +26,11 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
         public Block[,] GetBlocks()
         {
             return this.blocks;
+        }
+
+        public Build GetBuild()
+        {
+            return this.build;
         }
 
         //METODOS DE TERRAIN

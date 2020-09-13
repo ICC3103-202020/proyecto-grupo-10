@@ -8,5 +8,8 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
 {
     abstract class Build
     {
+        protected string name;
+        protected int buyPrice;
+        protected int sellPrice;
     }
 }

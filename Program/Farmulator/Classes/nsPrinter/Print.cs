@@ -1,5 +1,8 @@
 ﻿using Farmulator.Classes.nsGame.nsMap;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using Farmulator.Classes.nsGame.nsMarket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +60,146 @@ namespace Farmulator.Classes.nsPrinter
             }
         }
 
+        public static List<int> RenderMarket(Market market, Map map, int typeBuy, int buy)
+        {
+            List<string> possibleOptions = new List<string>();
+            List<int> optionsNumbers = new List<int>();
+            int optionNumber;
 
+            if (typeBuy == 1)
+            {
+                if (buy == 1)
+                {
+                    Terrain selectedTerrain;
+                    PriceProduct selectedSeed;
+                    List<Terrain> optionsTerrains = new List<Terrain>();
+                    List<PriceProduct> optionsSeeds = new List<PriceProduct>();
+
+                    for (int section = 0; section < 3; section++)
+                    {
+                        possibleOptions.Clear();
+
+                        //SECCION UNO SE ELIGE LA SEMILLA QUE SE DESEA COMPRAR
+                        if(section == 0)
+                        {
+
+                            string leftTab = new string(' ', 96);
+                            Console.WriteLine("\n" + leftTab + "SEMILLAS");
+
+                            int counter = 0;
+
+                            for (int i = 0; i < market.GetPricesProducts().Count; i++)
+                            {
+                                int optionlength;
+                                int lengthBackground;
+                                string leftBackground;
+
+                                if (market.GetPricesProducts()[i].GetProduct().GetType() == typeof(Seed))
+                                {
+
+                                    int value = market.GetPricesProducts()[i].GetPricesHistory()[market.GetPricesProducts()[i].GetPricesHistory().Count - 1];
+                                    Seed seed = (Seed)market.GetPricesProducts()[i].GetProduct();
+
+                                    optionlength = seed.GetName().Length + 18;
+
+                                    lengthBackground = 100 - (optionlength / 2);
+                                    leftBackground = new string(' ', lengthBackground);
+
+                                    Console.Write(leftBackground);
+                                    Console.Write((counter + 1) + " - " + seed.GetName() + " -- Valor = ¥ " + value.ToString() + "\n");
+
+                                    counter++;
+                                    possibleOptions.Add(counter.ToString());
+                                    optionsSeeds.Add(market.GetPricesProducts()[i]);
+                                }
+
+                            }
+                        }
+
+                        //SECCION DOS SE ELIGE EN QUE TERRENO COLOCARLO
+                        if (section == 1)
+                        {
+                            string leftTab = new string(' ', 96);
+                            Console.WriteLine("\n" + leftTab + "TERRENOS");
+
+                            int counter = 0;
+
+                            for (int i = 0; i < 100; i++)
+                            {
+                                int optionlength;
+                                int lengthBackground;
+                                string leftBackground;
+
+                                if (map.GetFarm().GetTerrains().Contains( map.GetTerrains()[ i / 10, i % 10] ))
+                                {
+
+                                    int positionX = i / 10 ;
+                                    int positionY = i % 10;
+                                    string build = "";
+
+                                    if (map.GetTerrains()[i/10,i%10].GetBuild() == null)
+                                    {
+                                        build = "Sin Edificacion";
+                                    }
+                                    if (map.GetTerrains()[i / 10, i % 10].GetBuild() != null)
+                                    {
+                                        build = map.GetTerrains()[i/10,i%10].GetBuild().GetType().ToString();
+                                    }
+
+                                    optionlength = 44;
+
+                                    lengthBackground = 100 - (optionlength / 2);
+                                    leftBackground = new string(' ', lengthBackground);
+
+                                    Console.Write(leftBackground);
+                                    Console.Write((counter + 1) + " - Terreno [" + positionX + "," + positionY + "]  -- Edificacion = " + build + "\n");
+
+                                    counter++;
+                                    possibleOptions.Add(counter.ToString());
+                                    optionsTerrains.Add(map.GetTerrains()[i / 10, i % 10]);
+                                }
+
+                            }
+                        }
+
+                        //SE PREGUNTA SI SE QUIERE DESTRUIR LA EDIFICACION SI ESTA EXISTE Y SE VERIFICA QUE EL DINERO ALCANCE
+                        if(section == 2)
+                        {
+                            Seed seed = (Seed)optionsSeeds[optionsNumbers[0] - 1].GetProduct();
+                            Console.WriteLine(seed.GetName());
+
+                            Console.WriteLine();
+                        }
+
+                        while (true)
+                        {
+                            string leftTabOption = new string(' ', 87);
+                            Console.WriteLine("\n" + leftTabOption + "Ingrese la opcion deseada:");
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (possibleOptions.Contains(optionSelect))
+                            {
+                                optionNumber = Int32.Parse(optionSelect);
+                                optionsNumbers.Add(optionNumber);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(leftTabOption + "Ingrese una opcion valida");
+                            }
+                        }
+
+                        
+
+                    }
+                }
+
+
+            }
+
+            return optionsNumbers;
+        }
         public static void RenderMap(Map map)
         {
             for (int i = 0; i < 100; i++)
