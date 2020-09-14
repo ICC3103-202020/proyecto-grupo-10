@@ -18,5 +18,26 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
             this.sellPrice = sellPrice;
             this.maxCapacity = maxCapacity;
         }
+
+        //ACCESO
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        public int GetBuyPrice()
+        {
+            return this.buyPrice;
+        }
+
+        public int GetSellPrice()
+        {
+            return this.maxCapacity;
+        }
+
+        public int GetMaxCapacity()
+        {
+            return this.maxCapacity;
+        }
     }
 }

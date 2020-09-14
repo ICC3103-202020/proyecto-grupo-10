@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Farmulator.Classes.nsGame.nsMap;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using Farmulator.Classes.nsGame.nsMarket;
 
@@ -62,6 +64,10 @@ namespace Farmulator.Classes.nsGame
         {
             return this.saveDate;
         }
+        public List<Build> GetBuilds()
+        {
+            return this.builds;
+        }
 
         //METODOS
         public void NewGame()
@@ -73,11 +79,36 @@ namespace Farmulator.Classes.nsGame
             Seed tomato = new Seed("Tomates", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, 1, 12, 5, 10);
             products.Add(tomato);
 
+            Land tomatoLand = new Land("Granja de Tomates", 1500, 500, 100, 100, 0, 1.0, false, tomato, 100, false, false);
+            this.builds.Add(tomatoLand);
+            Land maizLand = new Land("Granja de Maiz", 1500, 500, 100, 100, 0, 1.0, false, maiz, 100, false, false);
+            this.builds.Add(maizLand);
+
+            int[] range = { 3, 2 };
+            Animal pig = new Animal("Cerdo", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, range, 12, range, 10);
+            products.Add(pig);
+
+            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100);
+            this.builds.Add(pigRanch);
+
             this.market.PriceMarket(products);
+
+            Storage storage = new Storage("Almacen Grande",3000,500,360);
+
+            this.builds.Add(storage);
         }
         public void NextTurn()
         {
             //METODO QUE MANEJARA EL AVANCE DE TURNOS
+            this.turn++;
+        }
+
+        public void ConstructionBuilding(Terrain terrain, Build build, int cost)
+        {
+            terrain.Construction(build);
+
+            this.money = this.money - cost;
+
         }
         public bool SaveGame()
         {

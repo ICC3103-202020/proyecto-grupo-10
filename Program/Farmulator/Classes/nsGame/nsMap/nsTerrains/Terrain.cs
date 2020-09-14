@@ -34,6 +34,10 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
         }
 
         //METODOS DE TERRAIN
+        public void Construction(Build build)
+        {
+            this.build = build;
+        }
         public void GenerateBlocks()
         {
             for (int i = 0; i < 10; i++)

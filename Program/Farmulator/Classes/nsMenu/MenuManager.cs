@@ -217,7 +217,7 @@ namespace Farmulator.Classes.nsMenu
 
             while (true)
             {
-                int optionSelect = Print.RenderMenu(optionsMarketMenu, titleGameMenu, true);
+                int optionSelect = Print.RenderMenu(optionsMarketMenu, titleGameMenu,true);
 
                 switch (optionSelect)
                 {
@@ -242,15 +242,56 @@ namespace Farmulator.Classes.nsMenu
                         {
                             case 1:
 
-                                Print.RenderMarket(game.GetMarket(), game.GetMap(), optionSelect, optionSelectSubMenu);
+                                bool request = Print.RenderMarket( game, optionSelect, optionSelectSubMenu);
 
-                                return;
+                                if(request == false)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    return;
+                                }
+                            
                             case 2:
-                                return;
+
+                                bool request2 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+
+                                if (request2 == false)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    return;
+                                }
+
                             case 3:
-                                return;
+
+                                bool request3 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+
+                                if (request3 == false)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    return;
+                                }
+
                             case 4:
-                                return;
+
+                                bool request4 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+
+                                if (request4 == false)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    return;
+                                }
+
                             case 5:
                                 break;
                         }
