@@ -11,14 +11,16 @@ namespace Farmulator.Classes.nsGame.nsMarket
     {
         private Product product;
         private int initialPrice;
+        private int sellPrice;
         private int maxPriceVariation;
         private List<int> pricesHistory;
 
         //CONSTRUCTOR
-        public PriceProduct(Product product, int initialPrice, int maxPriceVariation)
+        public PriceProduct(Product product, int initialPrice, int sellPrice, int maxPriceVariation)
         {
             this.product = product;
             this.initialPrice = initialPrice;
+            this.sellPrice = sellPrice;
             this.maxPriceVariation = maxPriceVariation;
             this.pricesHistory = new List<int>();
         }
@@ -38,6 +40,10 @@ namespace Farmulator.Classes.nsGame.nsMarket
             return this.initialPrice;
         }
 
+        public int GetSellPrice()
+        {
+            return this.GetSellPrice();
+        }
         public int GetMaxPriceVariation()
         {
             return this.maxPriceVariation;

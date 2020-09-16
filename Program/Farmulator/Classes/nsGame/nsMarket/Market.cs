@@ -1,4 +1,6 @@
-﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains;
+using Farmulator.Classes.nsGame.nsMap;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -46,13 +48,36 @@ namespace Farmulator.Classes.nsGame.nsMarket
 
             for (int i = 0; i < products.Count; i++)
             {
-                PriceProduct nameProduct = new PriceProduct(products[i], 250, 120);
+                PriceProduct nameProduct = new PriceProduct(products[i], 250, 100, 120);
                 pricesProducts.Add(nameProduct);
             }
 
             CalculatePricesProducts(0);
 
             //MAS ADELANTE BUSCARA Y ABRIRA LOS DATOS DE UN NUEVO MERCADO SERIALIZADO
+        }
+
+        public void PriceMarketCnosumable(List<Consumable> consumables)
+        {
+            //INSTANCIAMOS TODOS LOS PRODUCTOS QUE ABRAN EN EL JUEGO JUNTO A SUS PRECIOS
+
+
+            for (int i = 0; i < consumables.Count; i++)
+            {
+                PriceConsumable nameProduct = new PriceConsumable(consumables[i], 50);
+                pricesConsumables.Add(nameProduct);
+            }
+
+            //MAS ADELANTE BUSCARA Y ABRIRA LOS DATOS DE UN NUEVO MERCADO SERIALIZADO
+        }
+
+        public void PriceMarketTerrain(Map map)
+        {
+            for(int i = 0; i < 100; i++)
+            {
+                PriceTerrain priceTerrain = new PriceTerrain(map.GetTerrains()[i / 10, i % 10], 10000);
+                this.pricesTerrains.Add(priceTerrain);
+            }
         }
 
         private void CalculatePricesProducts(int turn)

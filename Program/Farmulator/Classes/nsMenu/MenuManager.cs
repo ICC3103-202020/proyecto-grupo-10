@@ -307,13 +307,33 @@ namespace Farmulator.Classes.nsMenu
 
                     case 2:
 
+                        bool request22 = Print.RenderMarket(game, optionSelect, 0);
 
+                        if (request22 == false)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
 
 
                         //MERCADO DE CONSUMIBLES--------------------------------------------------------------------------------------------------------------------------------------
-                        break;
+
                     case 3:
-                        break;
+
+                        bool request23 = Print.RenderMarket(game, optionSelect, 0);
+
+                        if (request23 == false)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
+
                     case 4:
                         break;
                     case 5:

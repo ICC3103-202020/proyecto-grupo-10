@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
     class Storage:Build
     {
         private int maxCapacity;
+        private List<FinalProduct> finalProducts;
 
         //CONSTRUCTOR
         public Storage(string name, int buyPrice, int sellPrice, int maxCapacity)
@@ -17,6 +19,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
             this.buyPrice = buyPrice;
             this.sellPrice = sellPrice;
             this.maxCapacity = maxCapacity;
+            this.finalProducts = new List<FinalProduct>();
         }
 
         //ACCESO
@@ -38,6 +41,11 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
         public int GetMaxCapacity()
         {
             return this.maxCapacity;
+        }
+
+        public List<FinalProduct> GetFinalProducts()
+        {
+            return this.finalProducts;
         }
     }
 }

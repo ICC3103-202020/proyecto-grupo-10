@@ -28,7 +28,7 @@ namespace Farmulator.Classes.nsGame
         public Game()
         {
             this.turn = 1;
-            this.money = 50000;
+            this.money = 500000;
             this.map = new Map();
             this.market = new Market();
             this.creationDate = DateTime.Now;
@@ -91,12 +91,24 @@ namespace Farmulator.Classes.nsGame
             Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100);
             this.builds.Add(pigRanch);
 
-            this.market.PriceMarket(products);
+            this.market.PriceMarket(this.products);
 
             Storage storage = new Storage("Almacen Grande",3000,500,360);
 
             this.builds.Add(storage);
+
+            Consumable waterAnimal = new Consumable("Agua para animales","Aumenta el agua de algun animal");
+            this.consumables.Add(waterAnimal);
+
+            this.market.PriceMarketCnosumable(this.consumables);
+
+            this.market.PriceMarketTerrain(this.map);
+            
         }
+
+
+
+
         public void NextTurn()
         {
             //METODO QUE MANEJARA EL AVANCE DE TURNOS
@@ -110,6 +122,31 @@ namespace Farmulator.Classes.nsGame
             this.money = this.money - cost;
 
         }
+
+        public void ConstructionSell(Terrain terrain, int cost)
+        {
+            terrain.Deploy();
+
+            this.money = this.money + cost;
+        }
+
+        public void BuyConsumables(List<PriceConsumable> consumables, List<int> quantitys, int totalValue)
+        {
+            this.money -= totalValue;
+
+            for(int i = 0; i < consumables.Count; i++)
+            {
+                this.map.GetFarm().AddConsumables(consumables[i].GetConsumable(),quantitys[i]);
+            }
+        }
+
+        public void BuyTerrain(Terrain terrain, int value)
+        {
+            this.money -= value;
+
+            this.map.GetFarm().AddTerrain(terrain);
+        }
+
         public bool SaveGame()
         {
             return true;

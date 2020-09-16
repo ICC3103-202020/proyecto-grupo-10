@@ -38,6 +38,12 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
         {
             this.build = build;
         }
+
+        public void Deploy()
+        {
+            this.build = null;
+        }
+
         public void GenerateBlocks()
         {
             for (int i = 0; i < 10; i++)

@@ -1,4 +1,5 @@
 ﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,13 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
     class Farm
     {
         private List<Terrain> terrains;
+        private List<Consumable> consumables;
 
         //CONSTRUCTOR
         public Farm()
         {
             this.terrains = new List<Terrain>();
+            this.consumables = new List<Consumable>();
         }
 
         //ACCESOS
@@ -23,7 +26,25 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
             return this.terrains;
         }
 
+        public List<Consumable> GetConsumables()
+        {
+            return this.consumables;
+        }
+
         //METODOS
+        public void AddConsumables(Consumable consumable, int quantity)
+        {
+            for(int i = 0; i < quantity; i++)
+            {
+                this.consumables.Add(consumable);
+            }
+        }
+
+        public void AddTerrain(Terrain terrain)
+        {
+            this.terrains.Add(terrain);
+        }
+
         public void GenerateFarm(Terrain[,] terrainsMap)
         {
             Random rnd = new Random();

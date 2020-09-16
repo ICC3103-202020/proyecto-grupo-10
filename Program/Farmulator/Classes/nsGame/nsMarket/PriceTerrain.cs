@@ -10,12 +10,13 @@ namespace Farmulator.Classes.nsGame.nsMarket
     class PriceTerrain
     {
         private Terrain terrain;
-        private List<int> prices;
+        private int price;
 
         //CONSTRUCTOR
-        public PriceTerrain(Terrain terrain)
+        public PriceTerrain(Terrain terrain, int price)
         {
             this.terrain = terrain;
+            this.price = price;
         }
 
         //ACCESO
@@ -24,9 +25,9 @@ namespace Farmulator.Classes.nsGame.nsMarket
             return this.terrain;
         }
 
-        public List<int> GetPrices()
+        public int GetPrice()
         {
-            return this.prices;
+            return this.price;
         }
     }
 }

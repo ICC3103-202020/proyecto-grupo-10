@@ -10,12 +10,13 @@ namespace Farmulator.Classes.nsGame.nsMarket
     class PriceConsumable
     {
         private Consumable consumable;
-        private List<int> prices;
+        private int price;
 
         //CONSTRUCTOR
-        public PriceConsumable(Consumable consumable)
+        public PriceConsumable(Consumable consumable, int price)
         {
             this.consumable = consumable;
+            this.price = price;
         }
 
         //ACCESO
@@ -24,9 +25,9 @@ namespace Farmulator.Classes.nsGame.nsMarket
             return this.consumable;
         }
 
-        public List<int> GetPrices()
+        public int GetPrice()
         {
-            return this.prices;
+            return this.price;
         }
     }
 }
