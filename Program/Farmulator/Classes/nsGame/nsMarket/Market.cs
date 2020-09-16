@@ -41,7 +41,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
         }
 
         //METODOS
-        public void PriceMarket(List<Product> products)
+        public void PriceMarketProduct(List<Product> products)
         {
             //INSTANCIAMOS TODOS LOS PRODUCTOS QUE ABRAN EN EL JUEGO JUNTO A SUS PRECIOS
             
@@ -57,7 +57,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
             //MAS ADELANTE BUSCARA Y ABRIRA LOS DATOS DE UN NUEVO MERCADO SERIALIZADO
         }
 
-        public void PriceMarketCnosumable(List<Consumable> consumables)
+        public void PriceMarketConsumable(List<Consumable> consumables)
         {
             //INSTANCIAMOS TODOS LOS PRODUCTOS QUE ABRAN EN EL JUEGO JUNTO A SUS PRECIOS
 

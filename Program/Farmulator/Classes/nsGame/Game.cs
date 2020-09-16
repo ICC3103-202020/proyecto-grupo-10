@@ -91,7 +91,7 @@ namespace Farmulator.Classes.nsGame
             Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100);
             this.builds.Add(pigRanch);
 
-            this.market.PriceMarket(this.products);
+            this.market.PriceMarketProduct(this.products);
 
             Storage storage = new Storage("Almacen Grande",3000,500,360);
 
@@ -100,14 +100,11 @@ namespace Farmulator.Classes.nsGame
             Consumable waterAnimal = new Consumable("Agua para animales","Aumenta el agua de algun animal");
             this.consumables.Add(waterAnimal);
 
-            this.market.PriceMarketCnosumable(this.consumables);
+            this.market.PriceMarketConsumable(this.consumables);
 
             this.market.PriceMarketTerrain(this.map);
             
         }
-
-
-
 
         public void NextTurn()
         {
@@ -125,7 +122,7 @@ namespace Farmulator.Classes.nsGame
 
         public void ConstructionSell(Terrain terrain, int cost)
         {
-            terrain.Deploy();
+            terrain.Destroy();
 
             this.money = this.money + cost;
         }

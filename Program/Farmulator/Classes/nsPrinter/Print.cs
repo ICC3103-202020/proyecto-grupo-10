@@ -1167,6 +1167,98 @@ namespace Farmulator.Classes.nsPrinter
                 }
             }
 
+            if (typeBuy == 4)
+            {
+                //--------------------------------------------------------------------------------------------
+                //PRECIOS HISTORICOS POR SEMILLA
+                //--------------------------------------------------------------------------------------------
+
+                PriceProduct selectedSeed = null;
+                List<PriceProduct> optionsSeeds = new List<PriceProduct>();
+
+                bool exit = true;
+
+                while (exit)
+                {
+                    possibleOptions.Clear();
+                    optionsNumbers.Clear();
+                    optionsSeeds.Clear();
+
+                    Console.WriteLine(TextCenter("SEMILLAS"));
+
+                    int counter = 0;
+
+                    for (int i = 0; i < game.GetMarket().GetPricesProducts().Count; i++)
+                    {
+                        if (game.GetMarket().GetPricesProducts()[i].GetProduct().GetType() == typeof(Seed))
+                        {
+
+                            int value = game.GetMarket().GetPricesProducts()[i].GetPricesHistory()[game.GetMarket().GetPricesProducts()[i].GetPricesHistory().Count - 1];
+                            Seed seed = (Seed)game.GetMarket().GetPricesProducts()[i].GetProduct();
+
+                            Console.Write(TextCenter((counter + 1).ToString() + " - " + seed.GetName() + " -- Ultimo valor = ¥ " + value.ToString() + "\n"));
+
+                            counter++;
+                            possibleOptions.Add(counter.ToString());
+                            optionsSeeds.Add(game.GetMarket().GetPricesProducts()[i]);
+                        }
+
+                    }
+
+                    while (true)
+                    {
+                        Console.WriteLine(TextCenter("Ingrese la opcion deseada: "));
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (possibleOptions.Contains(optionSelect))
+                        {
+                            optionNumber = Int32.Parse(optionSelect);
+                            optionsNumbers.Add(optionNumber);
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    selectedSeed = optionsSeeds[optionsNumbers[0] - 1];
+
+                    for (int j = 0; j < selectedSeed.GetPricesHistory().Count; j++)
+                    {
+                        int price = selectedSeed.GetPricesHistory()[j];
+
+                        Console.Write(TextCenter("Turno " + (j + 1).ToString()  + " -- Valor = ¥ " + price.ToString() + "\n" ));
+                    }
+
+                    while (true)
+                    {
+                        Console.WriteLine(TextCenter("Desea ver otro historial ? :\n"));
+                        Console.WriteLine(TextCenter("1 - Si\n") + TextCenter("2 - No") );
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (optionSelect == "1")
+                        {
+                            break;
+                        }
+
+                        if (optionSelect == "2")
+                        {
+                            exit = false;
+                            break;
+                        }
+
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida\n"));
+                        }
+                    }
+
+                }
+            }
+
             return false;
         }
 

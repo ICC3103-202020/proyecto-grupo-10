@@ -39,7 +39,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
             this.build = build;
         }
 
-        public void Deploy()
+        public void Destroy()
         {
             this.build = null;
         }

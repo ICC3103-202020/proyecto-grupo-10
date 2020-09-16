@@ -134,7 +134,13 @@ namespace Farmulator.Classes.nsMenu
                         game.GetMap().GenerateMap(2, 0, 2);
                         break;
                     case 6:
-                        GameMenu();
+                        bool request = GameMenu();
+
+                        if (request == true)
+                        {
+                            return;
+                        }
+
                         break;
                     case 7:
                         return;
@@ -152,7 +158,7 @@ namespace Farmulator.Classes.nsMenu
 
         }
 
-        private static void GameMenu()
+        private static bool GameMenu()
         {
             string[] gameMenu = { "                                          ▄▄▄▄ ▄▄▄▄ ▄   ▄ ▄▄▄▄   ▄   ▄ ▄▄▄▄ ▄   ▄ ▄  ▄                                         ", 
                                   "                                          █ ▄▄ █  █ █▀▄▀█ █▄▄    █▀▄▀█ █▄▄  █▀▄ █ █  █                                         ", 
@@ -189,7 +195,7 @@ namespace Farmulator.Classes.nsMenu
 
                         break;
                     case 5:
-                        return;
+                        return true;
                 }
 
                 game.NextTurn();
@@ -242,9 +248,9 @@ namespace Farmulator.Classes.nsMenu
                         {
                             case 1:
 
-                                bool request = Print.RenderMarket( game, optionSelect, optionSelectSubMenu);
+                                bool request11 = Print.RenderMarket( game, optionSelect, optionSelectSubMenu);
 
-                                if(request == false)
+                                if(request11 == false)
                                 {
                                     break;
                                 }
@@ -255,9 +261,9 @@ namespace Farmulator.Classes.nsMenu
                             
                             case 2:
 
-                                bool request2 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+                                bool request12 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
 
-                                if (request2 == false)
+                                if (request12 == false)
                                 {
                                     break;
                                 }
@@ -268,9 +274,9 @@ namespace Farmulator.Classes.nsMenu
 
                             case 3:
 
-                                bool request3 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+                                bool request13 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
 
-                                if (request3 == false)
+                                if (request13 == false)
                                 {
                                     break;
                                 }
@@ -281,9 +287,9 @@ namespace Farmulator.Classes.nsMenu
 
                             case 4:
 
-                                bool request4 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
+                                bool request14 = Print.RenderMarket(game, optionSelect, optionSelectSubMenu);
 
-                                if (request4 == false)
+                                if (request14 == false)
                                 {
                                     break;
                                 }
@@ -307,9 +313,9 @@ namespace Farmulator.Classes.nsMenu
 
                     case 2:
 
-                        bool request22 = Print.RenderMarket(game, optionSelect, 0);
+                        bool request2 = Print.RenderMarket(game, optionSelect, 0);
 
-                        if (request22 == false)
+                        if (request2 == false)
                         {
                             break;
                         }
@@ -323,9 +329,9 @@ namespace Farmulator.Classes.nsMenu
 
                     case 3:
 
-                        bool request23 = Print.RenderMarket(game, optionSelect, 0);
+                        bool request3 = Print.RenderMarket(game, optionSelect, 0);
 
-                        if (request23 == false)
+                        if (request3 == false)
                         {
                             break;
                         }
@@ -335,9 +341,20 @@ namespace Farmulator.Classes.nsMenu
                         }
 
                     case 4:
-                        break;
+
+                        bool request4 = Print.RenderMarket(game, optionSelect, 0);
+
+                        if (request4 == false)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
+
                     case 5:
-                        break;
+                        return;
                 }
             }
             
