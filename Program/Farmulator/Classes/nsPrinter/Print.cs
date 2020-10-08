@@ -6,12 +6,16 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using Farmulator.Classes.nsGame.nsMarket;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -892,9 +896,52 @@ namespace Farmulator.Classes.nsPrinter
                     {
 
                         int value = game.GetMarket().GetPricesConsumables()[i].GetPrice();
-                        Consumable consumable = game.GetMarket().GetPricesConsumables()[i].GetConsumable();
 
-                        Console.Write(TextCenter((counter + 1).ToString() + " - " + consumable.GetName() + " -- Valor = ¥ " + value.ToString() + "\n"));
+                        string nameConsumable = "";
+
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(AnimalFood))
+                        {
+                            AnimalFood animalFood = (AnimalFood)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(AnimalWater))
+                        {
+                            AnimalWater animalFood = (AnimalWater)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Fertilizer))
+                        {
+                            Fertilizer animalFood = (Fertilizer)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Irrigation))
+                        {
+                            Irrigation animalFood = (Irrigation)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Pesticide))
+                        {
+                            Pesticide animalFood = (Pesticide)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Herbicide))
+                        {
+                            Herbicide animalFood = (Herbicide)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Fungicide))
+                        {
+                            Fungicide animalFood = (Fungicide)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+                        if (game.GetMarket().GetPricesConsumables()[i].GetConsumable().GetType() == typeof(Vaccine))
+                        {
+                            Vaccine animalFood = (Vaccine)game.GetMarket().GetPricesConsumables()[i].GetConsumable();
+                            nameConsumable = animalFood.GetName();
+                        }
+
+                        Console.Write(TextCenter((counter + 1).ToString() + " - " + nameConsumable + " -- Valor = ¥ " + value.ToString() + "\n"));
 
                         counter++;
                         possibleOptions.Add(counter.ToString());
@@ -986,8 +1033,51 @@ namespace Farmulator.Classes.nsPrinter
                 for(int j = 0; j < selectedsConsumables.Count; j++)
                 {
                     totalValue += selectedsConsumables[j].GetPrice() * selectedQuantity[j];
+                    string nameConsumable = "";
 
-                    Console.WriteLine(TextCenter((j+1).ToString() + " - " + selectedsConsumables[j].GetConsumable().GetName() + " x " + selectedQuantity[j].ToString() + " -- Valor = ¥ " + (selectedsConsumables[j].GetPrice() * selectedQuantity[j]).ToString()));
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(AnimalFood))
+                    {
+                        AnimalFood animalFood = (AnimalFood)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(AnimalWater))
+                    {
+                        AnimalWater animalFood = (AnimalWater)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Fertilizer))
+                    {
+                        Fertilizer animalFood = (Fertilizer)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Irrigation))
+                    {
+                        Irrigation animalFood = (Irrigation)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Pesticide))
+                    {
+                        Pesticide animalFood = (Pesticide)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Herbicide))
+                    {
+                        Herbicide animalFood = (Herbicide)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Fungicide))
+                    {
+                        Fungicide animalFood = (Fungicide)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+                    if (selectedsConsumables[j].GetConsumable().GetType() == typeof(Vaccine))
+                    {
+                        Vaccine animalFood = (Vaccine)selectedsConsumables[j].GetConsumable();
+                        nameConsumable = animalFood.GetName();
+                    }
+
+                    Console.WriteLine(TextCenter((j+1).ToString() + " - " + nameConsumable + " x " + selectedQuantity[j].ToString() + " -- Valor = ¥ " + (selectedsConsumables[j].GetPrice() * selectedQuantity[j]).ToString()));
                 }
 
                 Console.WriteLine(TextCenter(" -- Valor total = ¥ " + totalValue.ToString() + "\n"));
@@ -1374,6 +1464,143 @@ namespace Farmulator.Classes.nsPrinter
             return;
         }
 
+
+        public static void RenderFarmDetails(Map map)
+        {
+            Terrain[,] terrainsMap = map.GetTerrains();
+            List<Terrain> terrainsFarm = map.GetFarm().GetTerrains();
+
+            int counter = 0;
+
+            for(int i = 0; i < 300; i++)
+            {
+                int positionX = (i % 100) / 10;
+                int positionY = (i % 100) % 10;
+
+                if(i%100 == 1 || i%100 == 2)
+                {
+                    counter = 0;
+                }
+
+                if (terrainsFarm.Contains(terrainsMap[positionX , positionY]))
+                {
+                    if (terrainsMap[positionX, positionY].GetBuild() != null)
+                    {
+                        if (i / 100 == 0)
+                        {
+                            if (terrainsMap[positionX , positionY].GetBuild().GetType() == typeof(Ranch))
+                            {
+                                if(counter == 0)
+                                {
+                                    Console.Write("\n\n\n");
+                                    Console.WriteLine(TextCenter("ESTADO DE RANCHOS\n"));
+                                    counter = 1;
+                                }
+                                Ranch ranch = (Ranch)terrainsMap[positionX, positionY].GetBuild();
+
+                                Console.WriteLine(TextCenter(ranch.GetName() + "\n"));
+
+                                string healthBar = new string('█', ranch.GetHealth() / 2);
+                                string noBarHealth = new string('░', 50 - (ranch.GetHealth() / 2));
+                                healthBar += noBarHealth;
+                                Console.WriteLine(TextCenter("Salud : " + healthBar + " " + ranch.GetHealth() + "%"));
+
+                                string waterBar = new string('█', ranch.GetWater() / 2);
+                                string noBarWater = new string('░', 50 - (ranch.GetHealth() / 2));
+                                waterBar += noBarWater;
+                                Console.WriteLine(TextCenter("Agua : " + waterBar + " " + ranch.GetWater() + "%"));
+
+                                string foodBar = new string('█', ranch.GetFood() / 2);
+                                string noBarFood = new string('░', 50 - (ranch.GetHealth() / 2));
+                                foodBar += noBarFood;
+                                Console.WriteLine(TextCenter("Comida : " + foodBar + " " + ranch.GetFood() + "%"));
+
+                                
+                                Console.WriteLine(TextCenter("Maduracion : " + ranch.GetMaturity() + "/" + ranch.GetAnimal().GetTimeProduction() + " turnos"));
+
+                                Console.WriteLine(TextCenter("Enfermedad : " + ranch.GetDisease()));
+
+                            }
+
+                        }
+
+                        if (i / 100 == 1)
+                        {
+                            if (terrainsMap[positionX, positionY].GetBuild().GetType() == typeof(Land))
+                            {
+                                if (counter == 0)
+                                {
+                                    Console.Write("\n\n\n");
+                                    Console.WriteLine(TextCenter("ESTADO DE PLANTACIONES"));
+                                    counter = 1;
+                                }
+                                Land land = (Land)terrainsMap[positionX, positionY].GetBuild();
+
+                                Console.WriteLine(TextCenter(land.GetName() + "\n"));
+
+                                string healthBar = new string('█', land.GetHealth() / 2);
+                                string noBarHealth = new string('░',50 - (land.GetHealth() / 2));
+                                healthBar += noBarHealth;
+                                Console.WriteLine(TextCenter("Salud : " + healthBar + " " + land.GetHealth() + "%"));
+
+                                string waterBar = new string('█', land.GetWater() / 2);
+                                string noBarWater = new string('░', 50 - (land.GetWater() / 2));
+                                waterBar += noBarWater;
+                                Console.WriteLine(TextCenter("Agua : " + waterBar + " " + land.GetWater() + "%"));
+
+                                string foodBar = new string('█', land.GetNutrients() / 2);
+                                string noBarFood = new string('░', 50 - (land.GetNutrients() / 2));
+                                foodBar += noBarFood;
+                                Console.WriteLine(TextCenter("Comida : " + foodBar + " " + land.GetNutrients() + "%"));
+
+
+                                Console.WriteLine(TextCenter("Maduracion : " + land.GetMaturity() + "/" + land.GetSeed().GetTimeProduction() + " turnos"));
+
+                                Console.WriteLine(TextCenter("Hongos : " + land.GetDisease()));
+                                Console.WriteLine(TextCenter("Gusanos : " + land.GetWorms()));
+                                Console.WriteLine(TextCenter("Maleza : " + land.GetUndergrowth()));
+                            }
+                        }
+
+                        if (i / 100 == 2)
+                        {
+                            if (terrainsMap[positionX, positionY].GetBuild().GetType() == typeof(Storage))
+                            {
+                                if (counter == 0)
+                                {
+                                    Console.Write("\n\n\n");
+                                    Console.WriteLine(TextCenter("ESTADO DE ALMACENES"));
+                                    counter = 1;
+                                }
+                                Storage storage = (Storage)terrainsMap[positionX, positionY].GetBuild();
+
+                                Console.WriteLine(TextCenter(storage.GetName() + "\n" ));
+
+                                Console.WriteLine(TextCenter("Utilizacion : " + storage.GetFinalProducts().Count + "/" + storage.GetMaxCapacity() + "productos finales"));
+
+                                Console.WriteLine("");
+                                Console.WriteLine(TextCenter("Contenido"));
+
+                                for(int a = 0; a < storage.GetFinalProducts().Count; a++)
+                                {
+                                    if (storage.GetFinalProducts()[a].GetProduct().GetType() == typeof(Animal))
+                                    {
+                                        Animal animal = (Animal)storage.GetFinalProducts()[a].GetProduct();
+                                        Console.WriteLine(TextCenter(a + " - " + animal.GetName() + " - Calidad : " + storage.GetFinalProducts()[a].GetQuality()));
+                                    }
+                                    if (storage.GetFinalProducts()[a].GetProduct().GetType() == typeof(Seed))
+                                    {
+                                        Seed seed = (Seed)storage.GetFinalProducts()[a].GetProduct();
+                                        Console.WriteLine(TextCenter(a + " - " + seed.GetName() + " - Calidad : " + storage.GetFinalProducts()[a].GetQuality()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
         private static string TextCenter(string text)
         {
             int spaces = 100 - (text.Length / 2);

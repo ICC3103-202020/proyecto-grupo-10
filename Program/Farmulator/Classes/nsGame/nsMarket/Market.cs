@@ -1,6 +1,7 @@
 ﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains;
 using Farmulator.Classes.nsGame.nsMap;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -80,7 +81,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
             }
         }
 
-        private void CalculatePricesProducts(int turn)
+        public void CalculatePricesProducts(int turn)
         {
             if(turn == 0)
             {
@@ -149,6 +150,66 @@ namespace Farmulator.Classes.nsGame.nsMarket
                         continue;
                     }
                     
+                }
+            }
+
+            if (turn > 0)
+            {
+                Random rnd = new Random();
+
+                for (int i = 0; i < this.pricesProducts.Count; i++)
+                {
+
+                    if (this.pricesProducts[i].GetProduct().GetType() == typeof(Seed))
+                    {
+                        Seed seed = (Seed)this.pricesProducts[i].GetProduct();
+
+                        int initialPrice = this.pricesProducts[i].GetInitialPrice();
+                        int lastPrice = this.pricesProducts[i].GetPricesHistory()[this.pricesProducts[i].GetPricesHistory().Count - 1];
+                        int maxPriceVariation = this.pricesProducts[i].GetMaxPriceVariation();
+                        int variationPrice = seed.GetPriceVariation();
+
+                        while (true)
+                        {
+                            int variation = rnd.Next(0, 6);
+
+                            if (variation == 0 || variation == 5)
+                            {
+                                this.pricesProducts[i].AddPrice(lastPrice);
+                                break;
+                            }
+
+                            if (variation == 1 || variation == 4)
+                            {
+                                int price = lastPrice + variationPrice;
+
+                                if (price < initialPrice + maxPriceVariation)
+                                {
+                                    this.pricesProducts[i].AddPrice(price);
+                                    break;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+
+                            if (variation == 2 || variation == 3)
+                            {
+                                int price = lastPrice - variationPrice;
+
+                                if (price > initialPrice - maxPriceVariation)
+                                {
+                                    this.pricesProducts[i].AddPrice(price);
+                                    break;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

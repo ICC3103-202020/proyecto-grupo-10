@@ -4,14 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts
+namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables
 {
-    class Consumable
+    class Pesticide : Consumable
     {
-        private string name;
-        private string description;
-
-        public Consumable(string name, string description)
+        public Pesticide(string name, string description)
         {
             this.name = name;
             this.description = description;

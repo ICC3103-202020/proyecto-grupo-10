@@ -183,7 +183,7 @@ namespace Farmulator.Classes.nsMenu
                 switch (optionSelect)
                 {
                     case 1:
-
+                        FarmMenu();
                         break;
                     case 2:
                         MarketMenu();
@@ -357,6 +357,70 @@ namespace Farmulator.Classes.nsMenu
                         return;
                 }
             }
+            
+        }
+
+        private static void FarmMenu()
+        {
+            Print.RenderFarmDetails(game.GetMap());
+
+            string[] farmMenu = {   "                                                      ▄▄▄▄ ▄▄▄▄ ▄▄▄  ▄   ▄                                                        ",
+                                    "                                                      █▄▄  █  █ █  █ █▀▄▀█                                                        ",
+                                    "                                                      █    █▀▀█ █▀▀▄ █   █                                                        " };
+
+            List<string> optionsFarmMenu = new List<string>() { "Administrar produccion", "Administrar almacenamiento" , "Vovler al menu"};
+
+            int turn = game.GetTurn();
+            int money = game.GetMoney();
+            string titleGameMenu = "\n\n\n";
+
+            for (int i = 0; i < 3; i++)
+            {
+                titleGameMenu = titleGameMenu + stringTurn[i] + numbers[turn / 10][i] + numbers[turn % 10][i] + farmMenu[i] + stringMoney[i] + numbers[money / 100000][i] + numbers[(money / 10000) % 10][i] + numbers[(money / 1000) % 10][i] + numbers[(money / 100) % 10][i] + numbers[(money / 10) % 10][i] + numbers[money % 10][i] + "\n";
+            }
+
+            while (true)
+            {
+                int optionSelect = Print.RenderMenu(optionsFarmMenu, titleGameMenu, true);
+
+                switch (optionSelect)
+                {
+                    case 1:
+
+                        //ADMINISTRACION DE LA GRANJA -------------------------------------------------------------------------------------------------------------------------
+
+                        string subTitle = "\n\n\n" +
+                                          "                                                           ▄▄▄▄ ▄▄▄▄ ▄▄▄  ▄   ▄      ▄   ▄ ▄▄▄▄ ▄   ▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄ ▄   ▄ ▄▄▄▄ ▄   ▄ ▄▄▄▄▄\n" +
+                                          "                                                           █▄▄  █  █ █  █ █▀▄▀█      █▀▄▀█ █  █ █▀▄ █ █  █ █ ▄▄ █▄▄  █▀▄▀█ █▄▄  █▀▄ █   █  \n" +
+                                          "                                                           █    █▀▀█ █▀▀▄ █   █      █   █ █▀▀█ █  ▀█ █▀▀█ █▄▄█ █▄▄▄ █   █ █▄▄▄ █  ▀█   █  \n";
+
+                        List<string> optionsFarmManagement = new List<string>() { "Agregar agua o comida", "Aplicar cura", "Obtener producto terminado", "volver a granja" };
+
+                        int optionSelectSubMenu = Print.RenderMenu(optionsFarmManagement, subTitle, true);
+
+                        switch (optionSelectSubMenu)
+                        {
+                            case 1:
+
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+
+                            case 4:
+                                break;
+                        }
+                         
+
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        return;
+                }
+            }
+
             
         }
 

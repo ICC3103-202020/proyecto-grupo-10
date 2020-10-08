@@ -49,9 +49,12 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
         }
 
         //METODOS
-        public void qualityDecline()
+        public void QualityDecline()
         {
-
+            for(int i = 0; i < this.finalProducts.Count; i++)
+            {
+                this.finalProducts[i].QualityDecline();
+            }
         }
     }
 }

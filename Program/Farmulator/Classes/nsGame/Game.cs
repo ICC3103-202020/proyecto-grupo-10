@@ -8,6 +8,7 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using Farmulator.Classes.nsGame.nsMarket;
 
 namespace Farmulator.Classes.nsGame
@@ -87,8 +88,8 @@ namespace Farmulator.Classes.nsGame
             int[] range = { 3, 2 };
             Animal pig = new Animal("Cerdo", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, range, 12, range, 10);
             products.Add(pig);
-
-            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100);
+            
+            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100,pig.GetUnits());
             this.builds.Add(pigRanch);
 
             this.market.PriceMarketProduct(this.products);
@@ -97,7 +98,7 @@ namespace Farmulator.Classes.nsGame
 
             this.builds.Add(storage);
 
-            Consumable waterAnimal = new Consumable("Agua para animales","Aumenta el agua de algun animal");
+            AnimalWater waterAnimal = new AnimalWater("Agua para animales","Aumenta el agua de algun animal");
             this.consumables.Add(waterAnimal);
 
             this.market.PriceMarketConsumable(this.consumables);
@@ -109,7 +110,85 @@ namespace Farmulator.Classes.nsGame
         public void NextTurn()
         {
             //METODO QUE MANEJARA EL AVANCE DE TURNOS
+
             this.turn++;
+
+            //GENERAR NUEVOS PRECIOS PARA SEMILLAS
+
+            market.CalculatePricesProducts(this.turn);
+
+            //GENERAR NUEVOS PRECIOS PARA SEMILLAS
+            //----------------------------------------------------
+            //MADURAR PLANTACIONES/GANADO --- CALCULO DE NUEVA SALUD
+
+            for (int i = 0; i < this.map.GetFarm().GetTerrains().Count; i++)
+            {
+                if (this.map.GetFarm().GetTerrains()[i].GetBuild() != null)
+                {
+                    if (this.map.GetFarm().GetTerrains()[i].GetBuild().GetType() == typeof(Ranch))
+                    {
+                        Ranch ranch = (Ranch)this.map.GetFarm().GetTerrains()[i].GetBuild();
+                        ranch.ToMature();
+
+                        //CALCULO DE NUEVA SALUD
+
+                        ranch.HealthPenalty();
+
+                        //CALCULO DE NUEVA SALUD
+                        //-----------------------------------
+                        //CALCULO DE NIVELES DE AGUA Y COMIDA
+
+                        ranch.FoodWaterConsumption();
+
+                        //CALCULO DE NIVELES DE AGUA Y COMIDA
+                        //-----------------------------------
+                        //CALCULO DE PROBABILIDADES DE DESARROLLAR ALGUNA ENFERMEDAD
+
+                        ranch.DiseaseProbability();
+
+                        //CALCULO DE PROBABILIDADES DE DESARROLLAR ALGUNA ENFERMEDAD
+
+
+                    }
+                    if (this.map.GetFarm().GetTerrains()[i].GetBuild().GetType() == typeof(Land))
+                    {
+                        Land land = (Land)this.map.GetFarm().GetTerrains()[i].GetBuild();
+                        land.ToMature();
+
+                        //CALCULO DE NUEVA SALUD
+
+                        land.HealthPenalty();
+
+                        //CALCULO DE NUEVA SALUD
+                        //-----------------------------------
+                        //CALCULO DE NIVELES DE AGUA Y COMIDA
+
+                        land.FoodWaterConsumption();
+
+                        //CALCULO DE NIVELES DE AGUA Y COMIDA
+                        //-----------------------------------
+                        //CALCULO DE PROBABILIDADES DE DESARROLLAR ALGUNA ENFERMEDAD
+
+                        land.DiseaseProbability();
+
+                        //CALCULO DE PROBABILIDADES DE DESARROLLAR ALGUNA ENFERMEDAD
+                    }
+                    if(this.map.GetFarm().GetTerrains()[i].GetBuild().GetType() == typeof(Storage))
+                    {
+                        Storage storage = (Storage)this.map.GetFarm().GetTerrains()[i].GetBuild();
+
+                        //SE DISMINUYE EN 1 LA CALIDAD DE LOS PRODUCTOS ALMACENADOS
+
+                        storage.QualityDecline();
+                    }
+                    
+                }
+            }
+
+            //MADURAR PLANTACIONES/GANADO --- CALCULO DE NUEVA SALUD
+            //----------------------------------------------------
+
+
         }
 
         public void ConstructionBuilding(Terrain terrain, Build build, int cost)

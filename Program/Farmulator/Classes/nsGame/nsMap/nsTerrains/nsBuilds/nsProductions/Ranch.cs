@@ -11,8 +11,9 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
     {
         private Animal animal;
         private int food;
+        private int quantity;
 
-        public Ranch(string name, int buyPrice, int sellPrice, int health, int water, int maturity, double finalProduction, bool disease, Animal animal, int food)
+        public Ranch(string name, int buyPrice, int sellPrice, int health, int water, int maturity, double finalProduction, bool disease, Animal animal, int food, int quantity)
         {
             this.name = name;
             this.buyPrice = buyPrice;
@@ -24,6 +25,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
             this.disease = disease;
             this.animal = animal;
             this.food = food;
+            this.quantity = quantity;
         }
 
         //ACCESO
@@ -75,6 +77,93 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         public int GetFood()
         {
             return this.food;
+        }
+
+        public void ToMature()
+        {
+            this.maturity += 1;
+            return;
+        }
+
+        public void HealthPenalty()
+        {
+            if (this.water < this.animal.GetMinWater())
+            {
+                if (this.health - this.animal.GetWaterPenalty() >= 0)
+                {
+                    this.health -= this.animal.GetWaterPenalty();
+                }
+            }
+
+            if (this.food < this.animal.GetMinFood())
+            {
+                if (this.health - this.animal.GetFoodPenalty() >= 0)
+                {
+                    this.health -= this.animal.GetFoodPenalty();
+                }
+            }
+
+            if (this.disease == true)
+            {
+                if (this.health - this.animal.GetDiseasePenalty() >= 0)
+                {
+                    this.health -= this.animal.GetDiseasePenalty();
+                }
+            }
+
+            return;
+        }
+
+        public void FoodWaterConsumption()
+        {
+            int foodConsumption = this.animal.GetFoodConsumption();
+            int waterConsumption = this.animal.GetWaterConsumption();
+
+            if(this.food - foodConsumption >= 0)
+            {
+                this.food -= foodConsumption;
+            }
+
+            if (this.water - waterConsumption >= 0)
+            {
+                this.water -= waterConsumption;
+            }
+        }
+
+        public void DiseaseProbability()
+        {
+            Random rnd = new Random();
+
+            if (this.disease == false)
+            {
+                int probability = this.animal.GetDiseaseProbability() - 1;
+
+                if (probability >= rnd.Next(100))
+                {
+                    this.disease = true;
+                }
+            }
+
+            if(this.animal.GetDeadProbability() - 1 >= rnd.Next(100))
+            {
+                int animalsDead = rnd.Next(this.animal.GetDeadRange()[0] , this.animal.GetDeadRange()[1]);
+
+                if(this.quantity - animalsDead >= 0)
+                {
+                    this.quantity -= animalsDead;
+                }
+            }
+
+            if (this.animal.GetEscapeProbability() - 1 >= rnd.Next(100))
+            {
+                int animalsEscape = rnd.Next(this.animal.GetEscapeRange()[0], this.animal.GetEscapeRange()[1]);
+
+                if (this.quantity - animalsEscape >= 0)
+                {
+                    this.quantity -= animalsEscape;
+                }
+            }
+
         }
     }
 }

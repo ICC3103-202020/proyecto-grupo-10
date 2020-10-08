@@ -91,5 +91,107 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         {
             return this.undergrowth;
         }
+
+        public void ToMature()
+        {
+            this.maturity += 1;
+            return;
+        }
+
+        public void HealthPenalty()
+        {
+            if (this.water < this.seed.GetMinWater())
+            {
+                if (this.health - this.seed.GetWaterPenalty() >= 0)
+                {
+                    this.health -= this.seed.GetWaterPenalty();
+                }
+            }
+
+            if (this.nutrients < this.seed.GetMinNutrients())
+            {
+                if (this.health - this.seed.GetNutrientsPenalty() >= 0)
+                {
+                    this.health -= this.seed.GetNutrientsPenalty();
+                }
+            }
+
+            if (this.disease == true)
+            {
+                if (this.health - this.seed.GetDiseasePenalty() >= 0)
+                {
+                    this.health -= this.seed.GetDiseasePenalty();
+                }
+            }
+
+            if (this.worms == true)
+            {
+                if (this.health - this.seed.GetWormsPenalty() >= 0)
+                {
+                    this.health -= this.seed.GetWormsPenalty();
+                }
+            }
+
+            if (this.undergrowth == true)
+            {
+                if (this.health - this.seed.GetUndergrowthPenalty() >= 0)
+                {
+                    this.health -= this.seed.GetUndergrowthPenalty();
+                }
+            }
+
+            return;
+        }
+
+        public void FoodWaterConsumption()
+        {
+            int nutrientConsumption = this.seed.GetNutrientsConsumption();
+            int waterConsumption = this.seed.GetWaterConsumption();
+
+            if (this.nutrients - nutrientConsumption >= 0)
+            {
+                this.nutrients -= nutrientConsumption;
+            }
+
+            if (this.water - waterConsumption >= 0)
+            {
+                this.water -= waterConsumption;
+            }
+        }
+
+        public void DiseaseProbability()
+        {
+            Random rnd = new Random();
+
+            if(this.disease == false)
+            {
+                int probability = this.seed.GetDiseaseProbability() - 1;
+
+                if (probability >= rnd.Next(100))
+                {
+                    this.disease = true;
+                }
+            }
+
+            if (this.worms == false)
+            {
+                int probability = this.seed.GetWormsProbabiity() - 1;
+
+                if (probability >= rnd.Next(100))
+                {
+                    this.worms = true;
+                }
+            }
+
+            if (this.undergrowth == false)
+            {
+                int probability = this.seed.GetUndergrowthProbability() - 1;
+
+                if (probability >= rnd.Next(100))
+                {
+                    this.undergrowth = true;
+                }
+            }
+        }
     }
 }
