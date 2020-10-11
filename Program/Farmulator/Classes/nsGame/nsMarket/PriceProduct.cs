@@ -42,7 +42,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
 
         public int GetSellPrice()
         {
-            return this.GetSellPrice();
+            return this.sellPrice;
         }
         public int GetMaxPriceVariation()
         {

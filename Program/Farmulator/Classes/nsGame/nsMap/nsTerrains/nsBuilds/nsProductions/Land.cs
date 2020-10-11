@@ -1,4 +1,5 @@
-﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         private bool worms;
         private bool undergrowth;
 
-        public Land(string name,int buyPrice, int sellPrice, int health, int water, int maturity, double finalProduction, bool disease, Seed seed, int nutrients, bool worms, bool undergrowth)
+        public Land(string name,int buyPrice, int sellPrice, int health, int water, int maturity, int finalProduction, bool disease, Seed seed, int nutrients, bool worms, bool undergrowth)
         {
             this.name = name;
             this.buyPrice = buyPrice;
@@ -62,7 +63,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
             return this.maturity;
         }
 
-        public double GetFinalProduction()
+        public int GetFinalProduction()
         {
             return this.finalProduction;
         }
@@ -191,6 +192,34 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
                 {
                     this.undergrowth = true;
                 }
+            }
+        }
+
+        public void ApplyConsumable(Consumable consumable)
+        {
+            if (consumable.GetType() == typeof(Irrigation))
+            {
+                this.water = 100;
+            }
+
+            if (consumable.GetType() == typeof(Fertilizer))
+            {
+                this.nutrients = 100;
+            }
+
+            if (consumable.GetType() == typeof(Pesticide))
+            {
+                this.worms = false;
+            }
+
+            if (consumable.GetType() == typeof(Fungicide))
+            {
+                this.disease = false;
+            }
+
+            if (consumable.GetType() == typeof(Herbicide))
+            {
+                this.undergrowth = false;
             }
         }
     }

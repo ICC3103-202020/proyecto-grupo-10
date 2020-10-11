@@ -168,6 +168,8 @@ namespace Farmulator.Classes.nsMenu
 
             while (true)
             {
+                bool requestMenu = false;
+
                 int turn = game.GetTurn();
                 int money = game.GetMoney();
                 string titleGameMenu = "\n\n\n";
@@ -183,13 +185,13 @@ namespace Farmulator.Classes.nsMenu
                 switch (optionSelect)
                 {
                     case 1:
-                        FarmMenu();
+                        requestMenu = FarmMenu();
                         break;
                     case 2:
-                        MarketMenu();
+                        requestMenu = MarketMenu();
                         break;
                     case 3:
-
+                        requestMenu = true;
                         break;
                     case 4:
 
@@ -198,12 +200,15 @@ namespace Farmulator.Classes.nsMenu
                         return true;
                 }
 
-                game.NextTurn();
+                if (requestMenu == true)
+                {
+                    game.NextTurn();
+                }
             }
                             
         }
 
-        private static void MarketMenu()
+        private static bool MarketMenu()
         {
             string[] marketMenu = { "                                                 ▄   ▄ ▄▄▄▄ ▄▄▄  ▄  ▄ ▄▄▄▄ ▄▄▄▄▄                                              ",
                                     "                                                 █▀▄▀█ █  █ █  █ █▄▀  █▄▄    █                                                ",
@@ -256,7 +261,7 @@ namespace Farmulator.Classes.nsMenu
                                 }
                                 else
                                 {
-                                    return;
+                                    return true;
                                 }
                             
                             case 2:
@@ -269,7 +274,7 @@ namespace Farmulator.Classes.nsMenu
                                 }
                                 else
                                 {
-                                    return;
+                                    return true;
                                 }
 
                             case 3:
@@ -282,7 +287,7 @@ namespace Farmulator.Classes.nsMenu
                                 }
                                 else
                                 {
-                                    return;
+                                    return true;
                                 }
 
                             case 4:
@@ -295,7 +300,7 @@ namespace Farmulator.Classes.nsMenu
                                 }
                                 else
                                 {
-                                    return;
+                                    return true;
                                 }
 
                             case 5:
@@ -321,7 +326,7 @@ namespace Farmulator.Classes.nsMenu
                         }
                         else
                         {
-                            return;
+                            return true;
                         }
 
 
@@ -337,7 +342,7 @@ namespace Farmulator.Classes.nsMenu
                         }
                         else
                         {
-                            return;
+                            return true;
                         }
 
                     case 4:
@@ -350,17 +355,17 @@ namespace Farmulator.Classes.nsMenu
                         }
                         else
                         {
-                            return;
+                            return true;
                         }
 
                     case 5:
-                        return;
+                        return false;
                 }
             }
             
         }
 
-        private static void FarmMenu()
+        private static bool FarmMenu()
         {
             Print.RenderFarmDetails(game.GetMap());
 
@@ -401,12 +406,39 @@ namespace Farmulator.Classes.nsMenu
                         switch (optionSelectSubMenu)
                         {
                             case 1:
+                                bool request11 = Print.RenderFarmManagement(game,0,0);
 
-                                break;
+                                if(request11 == true)
+                                {
+                                    return true;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             case 2:
-                                break;
+                                bool request12 = Print.RenderFarmManagement(game, 0, 1);
+
+                                if (request12 == true)
+                                {
+                                    return true;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                              
                             case 3:
-                                break;
+                                bool request13 = Print.RenderFarmManagement(game, 0, 2);
+
+                                if (request13 == true)
+                                {
+                                    return true;
+                                }
+                                else
+                                {
+                                    break;
+                                }
 
                             case 4:
                                 break;
@@ -415,9 +447,18 @@ namespace Farmulator.Classes.nsMenu
 
                         break;
                     case 2:
-                        break;
+                        bool request14 = Print.RenderFarmManagement(game, 1, 0);
+
+                        if (request14 == true)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     case 3:
-                        return;
+                        return false;
                 }
             }
 

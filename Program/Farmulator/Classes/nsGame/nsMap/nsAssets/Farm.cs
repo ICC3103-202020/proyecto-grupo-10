@@ -1,4 +1,5 @@
 ﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
@@ -39,6 +40,42 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
             for(int i = 0; i < quantity; i++)
             {
                 this.consumables.Add(consumable);
+            }
+        }
+
+        public void ApplyConsumable(Consumable consumable, Build build)
+        {
+            for(int i = 0; i < this.consumables.Count; i++)
+            {
+                if (this.consumables[i].GetType() == consumable.GetType())
+                {
+                    consumables.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for(int j = 0; j < this.terrains.Count; j++)
+            {
+                if (this.terrains[j].GetBuild() != null)
+                {
+                    if (this.terrains[j].GetBuild().Equals(build))
+                    {
+
+                        if (this.terrains[j].GetBuild().GetType() == typeof(Land))
+                        {
+                            Land land = (Land)this.terrains[j].GetBuild();
+                            land.ApplyConsumable(consumable);
+                            break;
+                        }
+                        if (this.terrains[j].GetBuild().GetType() == typeof(Ranch))
+                        {
+                            Ranch ranch = (Ranch)this.terrains[j].GetBuild();
+                            ranch.ApplyConsumable(consumable);
+                            break;
+                        }
+                    }
+                    
+                }
             }
         }
 

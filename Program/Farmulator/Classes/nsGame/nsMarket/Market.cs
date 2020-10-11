@@ -49,7 +49,7 @@ namespace Farmulator.Classes.nsGame.nsMarket
 
             for (int i = 0; i < products.Count; i++)
             {
-                PriceProduct nameProduct = new PriceProduct(products[i], 250, 100, 120);
+                PriceProduct nameProduct = new PriceProduct(products[i], 250, 2, 120);
                 pricesProducts.Add(nameProduct);
             }
 

@@ -11,7 +11,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         protected int health;
         protected int water;
         protected int maturity;
-        protected double finalProduction;
+        protected int finalProduction;
         protected bool disease;
     }
 }

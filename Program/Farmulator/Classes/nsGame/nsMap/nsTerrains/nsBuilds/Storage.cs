@@ -1,4 +1,5 @@
-﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,38 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
             for(int i = 0; i < this.finalProducts.Count; i++)
             {
                 this.finalProducts[i].QualityDecline();
+            }
+        }
+
+        public void AddFinalProduct(Build build, int quality)
+        {
+            if(build.GetType() == typeof(Ranch))
+            {
+                Ranch ranch = (Ranch)build;
+                FinalProduct finalProduct = new FinalProduct(ranch.GetAnimal(), quality);
+
+                this.finalProducts.Add(finalProduct);
+            }
+
+            if (build.GetType() == typeof(Land))
+            {
+                Land land = (Land)build;
+                FinalProduct finalProduct = new FinalProduct(land.GetSeed(), quality);
+
+                this.finalProducts.Add(finalProduct);
+            }
+            
+        }
+
+        public void SellFinalProduct(FinalProduct finalProduct)
+        {
+            for(int i = 0; i < this.finalProducts.Count; i++)
+            {
+                if (finalProducts[i].Equals(finalProduct))
+                {
+                    this.finalProducts.RemoveAt(i);
+                    break;
+                }
             }
         }
     }

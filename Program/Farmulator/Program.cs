@@ -13,7 +13,7 @@ namespace Farmulator
         {
             Console.Title = "FARMULATOR THE GAME";
             MenuManager.StartMenu();
-
+            
         }
     }
 }

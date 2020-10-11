@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using Farmulator.Classes.nsGame.nsMap;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds;
@@ -70,6 +71,11 @@ namespace Farmulator.Classes.nsGame
             return this.builds;
         }
 
+        public List<Consumable> GetConsumables()
+        {
+            return this.consumables;
+        }
+
         //METODOS
         public void NewGame()
         {
@@ -77,19 +83,20 @@ namespace Farmulator.Classes.nsGame
 
             Seed maiz = new Seed("Maiz", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, 1, 12, 5, 10);
             products.Add(maiz);
-            Seed tomato = new Seed("Tomates", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, 1, 12, 5, 10);
+            Seed tomato = new Seed("Tomates", 3, 20, 2, 2, 10, 3, 5, 25, 3, 2, 1, 12, 5, 10);
             products.Add(tomato);
 
-            Land tomatoLand = new Land("Granja de Tomates", 1500, 500, 100, 100, 0, 1.0, false, tomato, 100, false, false);
+            Land tomatoLand = new Land("Granja de Tomates", 1500, 500, 100, 100, 0, 1, false, tomato, 100, false, false);
             this.builds.Add(tomatoLand);
-            Land maizLand = new Land("Granja de Maiz", 1500, 500, 100, 100, 0, 1.0, false, maiz, 100, false, false);
+
+            Land maizLand = new Land("Granja de Maiz", 1500, 500, 100, 100, 0, 1, false, maiz, 100, false, false);
             this.builds.Add(maizLand);
 
-            int[] range = { 3, 2 };
+            int[] range = { 2, 4 };
             Animal pig = new Animal("Cerdo", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, range, 12, range, 10);
             products.Add(pig);
             
-            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1.0, false, pig, 100,pig.GetUnits());
+            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1, false, pig, 100, 0);
             this.builds.Add(pigRanch);
 
             this.market.PriceMarketProduct(this.products);
@@ -98,8 +105,25 @@ namespace Farmulator.Classes.nsGame
 
             this.builds.Add(storage);
 
-            AnimalWater waterAnimal = new AnimalWater("Agua para animales","Aumenta el agua de algun animal");
+            //GENERAMOS TODOS LOS CONSUMIBLES
+
+            AnimalWater waterAnimal = new AnimalWater("Agua para animales","Rellena el nivel de agua de los animales");
             this.consumables.Add(waterAnimal);
+            AnimalFood foodAnimal = new AnimalFood("Comida para animales", "Rellena el nivel de comida para los animales");
+            this.consumables.Add(foodAnimal);
+            Irrigation irrigation = new Irrigation("Riego para plantaciones", "Rellena el nivel de agua de una plantacion");
+            this.consumables.Add(irrigation);
+            Fertilizer fertilizer = new Fertilizer("Fertilizante para plantaciones", "Rellena el nivel de nutrientes de una plantacion");
+            this.consumables.Add(fertilizer);
+            Vaccine vaccine = new Vaccine("Vacuna para animales", "Cura para la enfermedad de un rancho");
+            this.consumables.Add(vaccine);
+            Pesticide pesticide = new Pesticide("Pesticida para plantaciones", "Cura las plagas de gusanos de una plantacion");
+            this.consumables.Add(pesticide);
+            Fungicide fungicide = new Fungicide("Fungicida para plantaciones", "Cura los hongos de una plantacion");
+            this.consumables.Add(fungicide);
+            Herbicide herbicide = new Herbicide("Herbicida para plantaciones", "Cura las malezas de una plantacion");
+            this.consumables.Add(herbicide);
+
 
             this.market.PriceMarketConsumable(this.consumables);
 
@@ -221,6 +245,28 @@ namespace Farmulator.Classes.nsGame
             this.money -= value;
 
             this.map.GetFarm().AddTerrain(terrain);
+        }
+
+        public void SellFinalProduct(Terrain terrain, Storage storage, int price, int quality)
+        {
+            if(storage != null)
+            {
+                terrain.CreateFinalProduct(storage, quality);
+            }
+            else
+            {
+                this.money += price;
+                return;
+            }
+        }
+
+        public void SellFinalProductStorage(Storage storage, FinalProduct finalProduct, int price)
+        {
+            this.money += price;
+
+            storage.SellFinalProduct(finalProduct);
+
+            return;
         }
 
         public bool SaveGame()

@@ -1,4 +1,5 @@
 ﻿using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
+using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         private int food;
         private int quantity;
 
-        public Ranch(string name, int buyPrice, int sellPrice, int health, int water, int maturity, double finalProduction, bool disease, Animal animal, int food, int quantity)
+        public Ranch(string name, int buyPrice, int sellPrice, int health, int water, int maturity, int finalProduction, bool disease, Animal animal, int food, int quantity)
         {
             this.name = name;
             this.buyPrice = buyPrice;
@@ -59,7 +60,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
             return this.maturity;
         }
 
-        public double GetFinalProduction()
+        public int GetFinalProduction()
         {
             return this.finalProduction;
         }
@@ -77,6 +78,11 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         public int GetFood()
         {
             return this.food;
+        }
+
+        public int GetQuantity()
+        {
+            return this.quantity;
         }
 
         public void ToMature()
@@ -164,6 +170,24 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
                 }
             }
 
+        }
+
+        public void ApplyConsumable(Consumable consumable)
+        {
+            if(consumable.GetType() == typeof(AnimalFood))
+            {
+                this.food = 100;
+            }
+
+            if (consumable.GetType() == typeof(AnimalWater))
+            {
+                this.water = 100;
+            }
+
+            if (consumable.GetType() == typeof(Vaccine))
+            {
+                this.disease = false;
+            }
         }
     }
 }

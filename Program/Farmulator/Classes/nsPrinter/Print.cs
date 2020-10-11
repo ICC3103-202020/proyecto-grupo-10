@@ -986,14 +986,14 @@ namespace Farmulator.Classes.nsPrinter
                             
                         }
                         
-                        if(checker == 0)
+                        if(checker == 0 && optionSelect != "")
                         {
                             int quantity = Int32.Parse(optionSelect);
                             selectedQuantity.Add(quantity);
                             selectedsConsumables.Add(optionsConsumables[optionsNumbers[0] - 1 ]);
                             break;
                         }
-                        if(checker == 1)
+                        if(checker == 1 || optionSelect != "")
                         {
                             Console.WriteLine(TextCenter("Ingrese solo numeros"));
                         }
@@ -1352,14 +1352,1084 @@ namespace Farmulator.Classes.nsPrinter
             return false;
         }
 
+        public static bool RenderFarmManagement(Game game, int typeManagementBuild, int typeManagement )
+        {
+             
+            //---------------------
+            //ADMINISTRACION PRODUCCION
+            if(typeManagementBuild == 0)
+            {
+                List<string> options = new List<string>();
+                List<Build> builds = new List<Build>();
+                List<Consumable> consumables = game.GetMap().GetFarm().GetConsumables();
+                Consumable consumableSelected = null;
+                int buildSelected;
+                int aggregateSelection;
 
+                //----------------------
+                //AGREGAR AGUA O COMIDA
+                if(typeManagement == 0)
+                {
+                    options.Clear();
+                    builds.Clear();
+                    int counter = 0;
+                    //IMPRIMIMOS LAS PLANTACIONES O GANADOS
+                    for(int i = 0; i < 100; i++)
+                    {
+                        string name = "";
+                        int positionX = i / 10;
+                        int positionY = i % 10;
+
+                        if(game.GetMap().GetTerrains()[positionX , positionY].GetBuild() != null)
+                        {
+                            if(game.GetMap().GetTerrains()[positionX , positionY].GetBuild().GetType() == typeof(Land))
+                            {
+                                Land land = (Land)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = land.GetName();
+                                counter++;
+                                Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                options.Add(counter.ToString());
+                                builds.Add(land);
+                            }
+
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Ranch))
+                            {
+                                Ranch ranch = (Ranch)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = ranch.GetName();
+                                counter++;
+                                Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                options.Add(counter.ToString());
+                                builds.Add(ranch);
+                            }
+                        }
+                    }
+
+                    //SELECCIONAMOS LA PLANTACION O GANADO
+                    while (true)
+                    {
+                        Console.WriteLine(TextCenter("Ingrese la produccion que desea agregar agua o comida: "));
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (options.Contains(optionSelect))
+                        {
+                            buildSelected = Int32.Parse(optionSelect);
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    //AGREGAMOS AGUA O COMIDA
+                    while (true)
+                    {
+                        if (builds[buildSelected - 1].GetType() == typeof(Land))
+                        {
+                            Console.WriteLine(TextCenter("¿Que desea hacer?"));
+                            Console.WriteLine(TextCenter("1 - Regar plantacion"));
+                            Console.WriteLine(TextCenter("2 - Agregar nutrientes"));
+                        }
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                        {
+                            Console.WriteLine(TextCenter("¿Que desea hacer?"));
+                            Console.WriteLine(TextCenter("1 - Agregar agua a los animales"));
+                            Console.WriteLine(TextCenter("2 - Agregar comida a los animales"));
+                        }
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (optionSelect == "1")
+                        {
+                            if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                            {
+                                for(int m = 0; m < game.GetConsumables().Count; m++)
+                                {
+                                    if(game.GetConsumables()[m].GetType() == typeof(AnimalWater))
+                                    {
+                                        consumableSelected = game.GetConsumables()[m];
+                                    }
+                                }
+                            }
+                            if (builds[buildSelected - 1].GetType() == typeof(Land))
+                            {
+                                for (int m = 0; m < game.GetConsumables().Count; m++)
+                                {
+                                    if (game.GetConsumables()[m].GetType() == typeof(Irrigation))
+                                    {
+                                        consumableSelected = game.GetConsumables()[m];
+                                    }
+                                }
+                            }
+
+                            aggregateSelection = Int32.Parse(optionSelect);
+                            break;
+                        }
+                        if (optionSelect == "2")
+                        {
+                            if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                            {
+                                for (int m = 0; m < game.GetConsumables().Count; m++)
+                                {
+                                    if (game.GetConsumables()[m].GetType() == typeof(AnimalFood))
+                                    {
+                                        consumableSelected = game.GetConsumables()[m];
+                                    }
+                                }
+                            }
+                            if (builds[buildSelected - 1].GetType() == typeof(Land))
+                            {
+                                for (int m = 0; m < game.GetConsumables().Count; m++)
+                                {
+                                    if (game.GetConsumables()[m].GetType() == typeof(Fertilizer))
+                                    {
+                                        consumableSelected = game.GetConsumables()[m];
+                                    }
+                                }
+                            }
+
+                            aggregateSelection = Int32.Parse(optionSelect);
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    //REVISION SI POSEE O NO DE ESE CONSUMIBLE
+                    int quantityConsumable = 0;
+
+                    for(int a = 0; a < consumables.Count(); a++)
+                    {
+                        if (builds[buildSelected - 1].GetType() == typeof(Land))
+                        {
+                            if(aggregateSelection == 1)
+                            {
+                                if (consumables[a].GetType() == typeof(Irrigation))
+                                {
+                                    quantityConsumable++;
+                                }
+                            }
+                            if (aggregateSelection == 2)
+                            {
+                                if (consumables[a].GetType() == typeof(Fertilizer))
+                                {
+                                    quantityConsumable++;
+                                }
+                            }
+                        }
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                        {
+                            if (aggregateSelection == 1)
+                            {
+                                if (consumables[a].GetType() == typeof(AnimalWater))
+                                {
+                                    quantityConsumable++;
+                                }
+                            }
+                            if (aggregateSelection == 2)
+                            {
+                                if (consumables[a].GetType() == typeof(AnimalFood))
+                                {
+                                    quantityConsumable++;
+                                }
+                            }
+                        }
+                    }
+
+                    //SI NO POSEE DEL CONSUMIBLE SE SOLICITA COMPRAR O VOLVER
+                    if(quantityConsumable == 0)
+                    {
+                        Console.WriteLine(TextCenter("----- NO POSEE DEL CONSUMIBLE NECESARIO PARA LLEVAR LA ACCION -----"));
+
+                        while (true)
+                        {
+                            if (builds[buildSelected - 1].GetType() == typeof(Land))
+                            {
+                                if (aggregateSelection == 1)
+                                {
+                                    Console.WriteLine(TextCenter("¿Desea comprar riego para la plantacion?"));
+                                    Console.WriteLine(TextCenter("1 - Si"));
+                                    Console.WriteLine(TextCenter("2 - No"));
+                                }
+                                if (aggregateSelection == 2)
+                                {
+                                    Console.WriteLine(TextCenter("¿Desea comprar fertilizante para la plantacion?"));
+                                    Console.WriteLine(TextCenter("1 - Si"));
+                                    Console.WriteLine(TextCenter("2 - No"));
+                                }
+                            }
+
+                            if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                            {
+                                if(aggregateSelection == 1)
+                                {
+                                    Console.WriteLine(TextCenter("¿Desea comprar agua para los animales?"));
+                                    Console.WriteLine(TextCenter("1 - Si"));
+                                    Console.WriteLine(TextCenter("2 - No"));
+                                }
+                                if (aggregateSelection == 2)
+                                {
+                                    Console.WriteLine(TextCenter("¿Desea comprar comida para los animales?"));
+                                    Console.WriteLine(TextCenter("1 - Si"));
+                                    Console.WriteLine(TextCenter("2 - No"));
+                                }
+                            }
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (optionSelect == "1")
+                            {
+                                break;
+                            }
+                            if (optionSelect == "2")
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+
+                        //SE REVISA SI TIENE DINERO SUFICIENTE
+                        int valueConsumable = 0;
+                        PriceConsumable priceConsumable = null;
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Land))
+                        {
+                            if (aggregateSelection == 1)
+                            {
+                                for(int n = 0; n < game.GetMarket().GetPricesConsumables().Count; n++)
+                                {
+                                    if(game.GetMarket().GetPricesConsumables()[n].GetConsumable().GetType() == typeof(Irrigation))
+                                    {
+                                        priceConsumable = (PriceConsumable)game.GetMarket().GetPricesConsumables()[n];
+                                        valueConsumable = priceConsumable.GetPrice();
+                                    }
+                                }
+                            }
+                            if (aggregateSelection == 2)
+                            {
+                                for (int n = 0; n < game.GetMarket().GetPricesConsumables().Count; n++)
+                                {
+                                    if (game.GetMarket().GetPricesConsumables()[n].GetConsumable().GetType() == typeof(Fertilizer))
+                                    {
+                                        priceConsumable = (PriceConsumable)game.GetMarket().GetPricesConsumables()[n];
+                                        valueConsumable = priceConsumable.GetPrice();
+                                    }
+                                }
+                            }
+                        }
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                        {
+                            if (aggregateSelection == 1)
+                            {
+                                for (int n = 0; n < game.GetMarket().GetPricesConsumables().Count; n++)
+                                {
+                                    if (game.GetMarket().GetPricesConsumables()[n].GetConsumable().GetType() == typeof(AnimalWater))
+                                    {
+                                        priceConsumable = (PriceConsumable)game.GetMarket().GetPricesConsumables()[n];
+                                        valueConsumable = priceConsumable.GetPrice();
+                                    }
+                                }
+                            }
+                            if (aggregateSelection == 2)
+                            {
+                                for (int n = 0; n < game.GetMarket().GetPricesConsumables().Count; n++)
+                                {
+                                    if (game.GetMarket().GetPricesConsumables()[n].GetConsumable().GetType() == typeof(AnimalFood))
+                                    {
+                                        priceConsumable = (PriceConsumable)game.GetMarket().GetPricesConsumables()[n];
+                                        valueConsumable = priceConsumable.GetPrice();
+                                    }
+                                }
+                            }
+                        }
+
+                        //SI NO POSEE DINERO SUFICIENTE PARA COMPRAR EL CONSUMIBLE
+                        if(game.GetMoney() < valueConsumable)
+                        {
+                            Console.WriteLine(TextCenter("---- NO POSEE DINERO SUFICIENTE PARA COMPRAR EL CONSUMIBLE -----"));
+                            Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                            Console.ReadLine();
+                            return false;
+                        }
+
+                        //SI POSEE DINERO SUFICIENTE
+                        if (game.GetMoney() >= valueConsumable)
+                        {
+                            List<PriceConsumable> priceConsumables = new List<PriceConsumable>();
+                            priceConsumables.Add(priceConsumable);
+
+                            List<int> quantity = new List<int>();
+                            quantity.Add(1);
+
+                            game.BuyConsumables(priceConsumables, quantity, valueConsumable);
+
+                            game.GetMap().GetFarm().ApplyConsumable(consumableSelected, builds[buildSelected - 1]);
+
+                            Console.WriteLine(TextCenter("---- SU COMPRA FUE REALIZADA CON EXITO Y APLICADA A SU PRODUCCION -----"));
+                            Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                            Console.ReadLine();
+                            return true;
+                        }
+                    }
+
+                    //SI POSEE DEL CONSUMIBLE
+                    if (quantityConsumable > 0)
+                    {
+                        game.GetMap().GetFarm().ApplyConsumable(consumableSelected, builds[buildSelected - 1]);
+
+                        Console.WriteLine(TextCenter("---- SU CONSUMIBLE FUE APLICADO A SU PRODUCCION -----"));
+                        Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                        Console.ReadLine();
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                //----------------------
+                //APLICAR CURA
+                if (typeManagement == 1)
+                {
+                    options.Clear();
+                    builds.Clear();
+                    int counter = 0;
+                    //IMPRIMIMOS LAS PLANTACIONES O GANADOS
+                    for (int i = 0; i < 100; i++)
+                    {
+                        string name = "";
+                        int positionX = i / 10;
+                        int positionY = i % 10;
+
+                        if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
+                        {
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Land))
+                            {
+                                Land land = (Land)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = land.GetName();
+                                counter++;
+                                Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                options.Add(counter.ToString());
+                                builds.Add(land);
+                            }
+
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Ranch))
+                            {
+                                Ranch ranch = (Ranch)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = ranch.GetName();
+                                counter++;
+                                Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                options.Add(counter.ToString());
+                                builds.Add(ranch);
+                            }
+                        }
+                    }
+
+                    //SELECCIONAMOS LA PLANTACION O GANADO
+                    while (true)
+                    {
+                        Console.WriteLine(TextCenter("Ingrese la produccion que desea curar: "));
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (options.Contains(optionSelect))
+                        {
+                            buildSelected = Int32.Parse(optionSelect);
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    //SE VERIFICA QUE POSEA ALGUNA ENFERMEDAD Y QUE TIPO DE ENFERMEDAD SE DESEA CURAR
+                    while (true)
+                    {
+                        int diseaseCounter = 0;
+                        List<Consumable> optionsConsumables = new List<Consumable>();
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Land))
+                        {
+                            Land land = (Land)builds[buildSelected - 1];
+
+                            if (land.GetDisease() == true)
+                            {
+                                diseaseCounter++;
+                                Console.WriteLine(TextCenter(diseaseCounter.ToString() + " - Curar Hongos"));
+                                for(int n = 0; n < game.GetConsumables().Count; n++)
+                                {
+                                    if (game.GetConsumables()[n].GetType() == typeof(Fungicide))
+                                    {
+                                        optionsConsumables.Add(game.GetConsumables()[n]);
+                                    }
+                                }
+                            }
+
+                            if (land.GetWorms() == true)
+                            {
+                                diseaseCounter++;
+                                Console.WriteLine(TextCenter(diseaseCounter.ToString() + " - Curar Gusanos"));
+                                for (int n = 0; n < game.GetConsumables().Count; n++)
+                                {
+                                    if (game.GetConsumables()[n].GetType() == typeof(Pesticide))
+                                    {
+                                        optionsConsumables.Add(game.GetConsumables()[n]);
+                                    }
+                                }
+                            }
+
+                            if (land.GetUndergrowth() == true)
+                            {
+                                diseaseCounter++;
+                                Console.WriteLine(TextCenter(diseaseCounter.ToString() + " - Curar Maleza"));
+                                for (int n = 0; n < game.GetConsumables().Count; n++)
+                                {
+                                    if (game.GetConsumables()[n].GetType() == typeof(Herbicide))
+                                    {
+                                        optionsConsumables.Add(game.GetConsumables()[n]);
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                        if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                        {
+                            Ranch ranch = (Ranch)builds[buildSelected - 1];
+
+                            if(ranch.GetDisease() == true)
+                            {
+                                diseaseCounter++;
+                                Console.WriteLine(TextCenter(diseaseCounter.ToString() + " - Curar Enfermedad"));
+                                for (int n = 0; n < game.GetConsumables().Count; n++)
+                                {
+                                    if (game.GetConsumables()[n].GetType() == typeof(Vaccine))
+                                    {
+                                        optionsConsumables.Add(game.GetConsumables()[n]);
+                                    }
+                                }
+                            }
+                        }
+
+                        if(diseaseCounter == 0)
+                        {
+                            Console.WriteLine(TextCenter("---- SU PRODUCCION NO POSEE ENFERMEDAD PARA CURAR -----"));
+                            Console.WriteLine(TextCenter("PRESIONE ENTER PARA VOLVER"));
+                            Console.ReadLine();
+                            return false;
+                        }
+
+                        string optionSelect = Console.ReadLine();
+
+
+                        if(optionSelect == "1" || optionSelect == "2" || optionSelect == "3")
+                        {
+                            int optionSelectInt = Int32.Parse(optionSelect);
+
+                            if(optionSelectInt <= optionsConsumables.Count())
+                            {
+                                consumableSelected = optionsConsumables[optionSelectInt - 1];
+                                break;
+                            }
+
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+                        
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    //REVISION SI POSEE O NO DE ESE CONSUMIBLE
+                    int quantityConsumable = 0;
+
+                    if (consumables.Contains(consumableSelected))
+                    {
+                        quantityConsumable = 1;
+                    }
+
+                    //SI NO POSEE DEL CONSUMIBLE SE SOLICITA COMPRAR O VOLVER
+                    if (quantityConsumable == 0)
+                    {
+                        Console.WriteLine(TextCenter("----- NO POSEE DEL CONSUMIBLE NECESARIO PARA LLEVAR LA ACCION -----"));
+
+                        while (true)
+                        {
+                            if(consumableSelected.GetType() == typeof(Vaccine))
+                            {
+                                Console.WriteLine(TextCenter("¿Desea comprar vacuna para los animales?"));
+                                Console.WriteLine(TextCenter("1 - Si"));
+                                Console.WriteLine(TextCenter("2 - No"));
+                            }
+                            if (consumableSelected.GetType() == typeof(Fungicide))
+                            {
+                                Console.WriteLine(TextCenter("¿Desea fungicida para la plantacion?"));
+                                Console.WriteLine(TextCenter("1 - Si"));
+                                Console.WriteLine(TextCenter("2 - No"));
+                            }
+                            if (consumableSelected.GetType() == typeof(Pesticide))
+                            {
+                                Console.WriteLine(TextCenter("¿Desea pesticida para la plantacion?"));
+                                Console.WriteLine(TextCenter("1 - Si"));
+                                Console.WriteLine(TextCenter("2 - No"));
+                            }
+                            if (consumableSelected.GetType() == typeof(Herbicide))
+                            {
+                                Console.WriteLine(TextCenter("¿Desea herbicida para la plantacion?"));
+                                Console.WriteLine(TextCenter("1 - Si"));
+                                Console.WriteLine(TextCenter("2 - No"));
+                            }
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (optionSelect == "1")
+                            {
+                                break;
+                            }
+                            if (optionSelect == "2")
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+
+                        //SE REVISA SI TIENE DINERO SUFICIENTE
+                        int valueConsumable = 0;
+                        PriceConsumable priceConsumable = null;
+
+                        for(int z = 0; z < game.GetMarket().GetPricesConsumables().Count; z++)
+                        {
+                            if(game.GetMarket().GetPricesConsumables()[z].GetConsumable().GetType() == consumableSelected.GetType())
+                            {
+                                priceConsumable = game.GetMarket().GetPricesConsumables()[z];
+                                valueConsumable = game.GetMarket().GetPricesConsumables()[z].GetPrice();
+                            }
+                        }
+
+                        //SI NO POSEE DINERO SUFICIENTE PARA COMPRAR EL CONSUMIBLE
+                        if (game.GetMoney() < valueConsumable)
+                        {
+                            Console.WriteLine(TextCenter("---- NO POSEE DINERO SUFICIENTE PARA COMPRAR EL CONSUMIBLE -----"));
+                            Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                            Console.ReadLine();
+                            return false;
+                        }
+
+                        //SI POSEE DINERO SUFICIENTE
+                        if (game.GetMoney() >= valueConsumable)
+                        {
+                            List<PriceConsumable> priceConsumables = new List<PriceConsumable>();
+                            priceConsumables.Add(priceConsumable);
+
+                            List<int> quantity = new List<int>();
+                            quantity.Add(1);
+
+                            game.BuyConsumables(priceConsumables, quantity, valueConsumable);
+
+                            game.GetMap().GetFarm().ApplyConsumable(consumableSelected, builds[buildSelected - 1]);
+
+                            Console.WriteLine(TextCenter("---- SU COMPRA FUE REALIZADA CON EXITO Y APLICADA A SU PRODUCCION -----"));
+                            Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                            Console.ReadLine();
+                            return true;
+                        }
+                    }
+
+                    //SI POSEE DEL CONSUMIBLE
+                    if (quantityConsumable > 0)
+                    {
+                        game.GetMap().GetFarm().ApplyConsumable(consumableSelected, builds[buildSelected - 1]);
+
+                        Console.WriteLine(TextCenter("---- SU CONSUMIBLE FUE APLICADO A SU PRODUCCION -----"));
+                        Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                        Console.ReadLine();
+                        return true;
+                    }
+                }
+
+                //----------------------
+                //OBTENER PRODUCTO TERMINADO
+                if (typeManagement == 2)
+                {
+                    options.Clear();
+                    builds.Clear();
+
+
+                    List<Terrain> terrains = new List<Terrain>();
+
+                    int counter = 0;
+                    //IMPRIMIMOS LAS PLANTACIONES O GANADOS
+                    for (int i = 0; i < 100; i++)
+                    {
+                        string name = "";
+                        int positionX = i / 10;
+                        int positionY = i % 10;
+
+                        if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
+                        {
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Land))
+                            {
+                                Land land = (Land)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = land.GetName();
+
+                                if (land.GetMaturity() >= land.GetSeed().GetTimeProduction())
+                                {
+                                    counter++;
+                                    Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                    options.Add(counter.ToString());
+                                    builds.Add(land);
+                                    terrains.Add(game.GetMap().GetTerrains()[positionX, positionY]);
+                                }
+
+                            }
+
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Ranch))
+                            {
+                                Ranch ranch = (Ranch)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = ranch.GetName();
+
+                                if (ranch.GetMaturity() >= ranch.GetAnimal().GetTimeProduction())
+                                {
+                                    counter++;
+                                    Console.WriteLine(TextCenter(counter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                    options.Add(counter.ToString());
+                                    builds.Add(ranch);
+                                    terrains.Add(game.GetMap().GetTerrains()[positionX, positionY]);
+                                }
+                            }
+                        }
+                    }
+
+                    if (counter == 0)
+                    {
+                        Console.WriteLine(TextCenter("----- NO POSEE PLANTACIONES NI GANADOS MADUROS PARA OBTENER SU PRODUCTO -----"));
+                        Console.WriteLine(TextCenter("PRESIONES ENTER PARA SALIR"));
+                        Console.ReadLine();
+
+                        return false;
+                    }
+
+                    //SELECCIONAMOS LA PLANTACION O GANADO
+                    while (true)
+                    {
+                        Console.WriteLine(TextCenter("Ingrese la produccion que desea producir: "));
+
+                        string optionSelect = Console.ReadLine();
+
+                        if (options.Contains(optionSelect))
+                        {
+                            buildSelected = Int32.Parse(optionSelect);
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                        }
+                    }
+
+                    //CALCULAMOS LOS ATRIBUTOS DE LA CALIDAD
+
+                    int landProportion = 0;
+                    int terrainQuality = 0;
+                    int healthProduct = 0;
+                    int quality = 0;
+                    int priceProduct = 0;
+
+                    //SE OBTIENE LA PROPORCION DE TIERRA Y SU CALIDAD PROMEDIO
+
+                    int earthCounter = 0;
+                    int earthQualitySum = 0;
+                    for (int j = 0; j < 100; j++)
+                    {
+                        if (terrains[buildSelected - 1].GetBlocks()[j / 10, j % 10].GetType() == typeof(Earth))
+                        {
+                            Earth earth = (Earth)terrains[buildSelected - 1].GetBlocks()[j / 10, j % 10];
+
+                            earthCounter++;
+                            earthQualitySum += earth.GetQuality();
+                        }
+                    }
+
+                    terrainQuality = earthQualitySum / earthCounter;
+
+                    landProportion = earthCounter;
+
+
+                    //SE OBTIENE LA SALUD DEL PRDUCTO
+                    if (builds[buildSelected - 1].GetType() == typeof(Land))
+                    {
+                        Land land = (Land)builds[buildSelected - 1];
+
+                        healthProduct = land.GetHealth();
+                        quality = healthProduct * terrainQuality * landProportion;
+                    }
+                    if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                    {
+                        Ranch ranch = (Ranch)builds[buildSelected - 1];
+
+                        healthProduct = ranch.GetHealth();
+                        quality = healthProduct * (ranch.GetQuantity() / (ranch.GetAnimal().GetUnits() * earthCounter));
+                    }
+
+                    //SE CALCULA EL PRECIO DE VENTA FINAL SEGUN VALOR EN EL MERCADO * CALIDAD
+                    for (int b = 0; b < game.GetMarket().GetPricesProducts().Count; b++)
+                    {
+                        if (game.GetMarket().GetPricesProducts()[b].GetProduct().GetType() == typeof(Animal))
+                        {
+                            Animal animal = (Animal)game.GetMarket().GetPricesProducts()[b].GetProduct();
+
+                            if (builds[buildSelected - 1].GetType() == typeof(Ranch))
+                            {
+                                Ranch ranch = (Ranch)builds[buildSelected - 1];
+
+                                if (ranch.GetAnimal().Equals(animal))
+                                {
+                                    priceProduct = (game.GetMarket().GetPricesProducts()[b].GetSellPrice() * quality) / 100;
+                                }
+                            }
+                        }
+                        if (game.GetMarket().GetPricesProducts()[b].GetProduct().GetType() == typeof(Seed))
+                        {
+                            Seed seed = (Seed)game.GetMarket().GetPricesProducts()[b].GetProduct();
+
+                            if (builds[buildSelected - 1].GetType() == typeof(Land))
+                            {
+                                Land land = (Land)builds[buildSelected - 1];
+
+                                if (land.GetSeed().Equals(seed))
+                                {
+                                    priceProduct = (game.GetMarket().GetPricesProducts()[b].GetSellPrice() * quality) / 100;
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    //SE VERIFICARA SI POSEE ALMACENES
+                    List<Storage> storages = new List<Storage>();
+                    List<string> storagesOptions = new List<string>();
+                    int storageSelected = 0;
+                    int storageCounter = 0;
+
+                    for (int a = 0; a < 100; a++)
+                    {
+                        string name = "";
+                        int positionX = a / 10;
+                        int positionY = a % 10;
+
+                        if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
+                        {
+                            if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Storage))
+                            {
+                                Storage storage = (Storage)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                                name = storage.GetName();
+
+                                storageCounter++;
+                                Console.WriteLine(TextCenter(storageCounter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                                storagesOptions.Add(storageCounter.ToString());
+                                storages.Add(storage);
+                            }
+                        }
+                    }
+
+                    //SI NO POSEE ALMACEN SE PREGUNTA SI DASEA VENDER EL PRODUCTO
+                    if (storageCounter == 0)
+                    {
+                        Console.WriteLine(TextCenter("----- NO POSEE ALMACEN DONDE GUARDAR SU PRODUCTO -----\n"));
+                        Console.WriteLine(TextCenter("El producto puede ser vendido por : " + priceProduct.ToString()) );
+
+                        while (true)
+                        {
+                            Console.WriteLine(TextCenter("¿Desea vender el producto?"));
+                            Console.WriteLine(TextCenter("1 - Si"));
+                            Console.WriteLine(TextCenter("2 - No"));
+
+                            string optionSelect = Console.ReadLine();
+
+                            if(optionSelect == "1")
+                            {
+                                Console.WriteLine(TextCenter("----- SU PRODUCTO FUE VENDIDO EXITOSAMENTE -----\n"));
+                                Console.WriteLine(TextCenter("----- PRESIONE ENTER PARA SALIR -----\n"));
+                                Console.ReadLine();
+
+                                game.SellFinalProduct(terrains[buildSelected - 1], null, priceProduct, quality);
+                                return true;
+
+                            }
+
+
+                            if (optionSelect == "2")
+                            {
+                                Console.WriteLine(TextCenter("----- LA TIERRA NO FUE PROCESADA -----\n"));
+                                Console.WriteLine(TextCenter("----- PRESIONE ENTER PARA SALIR -----\n"));
+                                Console.ReadLine();
+
+                                return false;
+
+                            }
+
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+                        
+                    }
+
+                    //SI POSEE ALMACEN SE GUARDA EL PRODUCTO EN EL ALMACEN SELECCIONADO
+                    if(storageCounter > 0)
+                    {
+                        while (true)
+                        {
+                            Console.WriteLine(TextCenter("Ingrese en que almacen desea guardar el producto: "));
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (storagesOptions.Contains(optionSelect))
+                            {
+                                storageSelected = Int32.Parse(optionSelect);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+
+                        Storage storage = storages[storageSelected - 1];
+
+                        game.SellFinalProduct(terrains[buildSelected - 1], storage, priceProduct, quality);
+
+                        Console.WriteLine(TextCenter("----- SU PRODUCTO FUE ALMACENADO EXITOSAMENTE -----\n"));
+                        Console.WriteLine(TextCenter("----- PRESIONE ENTER PARA SALIR -----\n"));
+                        Console.ReadLine();
+
+                        return true;
+                    }
+
+                }
+
+            }
+            //---------------------
+            //ADMINISTRACION ALMACENAMIENTO
+            if (typeManagementBuild == 1)
+            {
+                // SE VERIFICARA SI POSEE ALMACENES
+                List<Storage> storages = new List<Storage>();
+                List<string> storagesOptions = new List<string>();
+                int finalProductCounter = 0;
+                int storageSelected = 0;
+                int storageCounter = 0;
+
+                for (int a = 0; a < 100; a++)
+                {
+                    string name = "";
+                    int positionX = a / 10;
+                    int positionY = a % 10;
+
+                    if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
+                    {
+                        if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Storage))
+                        {
+                            Storage storage = (Storage)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
+                            name = storage.GetName();
+
+                            storageCounter++;
+                            Console.WriteLine(TextCenter(storageCounter.ToString() + " - " + name + " - Terreno[" + positionX.ToString() + "," + positionY.ToString() + "]"));
+                            storagesOptions.Add(storageCounter.ToString());
+                            storages.Add(storage);
+
+                            for (int b = 0; b < storage.GetFinalProducts().Count; b++)
+                            {
+
+                                if (storage.GetFinalProducts()[b].GetProduct().GetType() == typeof(Seed))
+                                {
+                                    Seed seed = (Seed)storage.GetFinalProducts()[b].GetProduct();
+
+                                    Console.WriteLine(TextCenter(" - " + seed.GetName() + " - Calidad :" + storage.GetFinalProducts()[b].GetQuality().ToString()));
+                                    finalProductCounter++;
+                                }
+
+                                if (storage.GetFinalProducts()[b].GetProduct().GetType() == typeof(Animal))
+                                {
+                                    Animal animal = (Animal)storage.GetFinalProducts()[b].GetProduct();
+
+                                    Console.WriteLine(TextCenter(" - " + animal.GetName() + " - Calidad :" + storage.GetFinalProducts()[b].GetQuality().ToString()));
+                                    finalProductCounter++;
+                                }
+
+                            }
+
+                            Console.WriteLine("\n");
+
+                        }
+                    }
+                }
+
+                //SI NO POSEE ALMACEN SE PREGUNTA SI DASEA VENDER EL PRODUCTO
+                if (storageCounter == 0)
+                {
+                    Console.WriteLine(TextCenter("----- NO POSEE ALMACEN PARA ADMINISTRAR -----\n"));
+                    Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                    Console.ReadLine();
+
+                    return false;
+
+                }
+
+                if (storageCounter > 0)
+                {
+                    if (finalProductCounter == 0)
+                    {
+                        Console.WriteLine(TextCenter("----- NO POSEE PRODUCTOS FINALES PARA ADMINISTRAR -----\n"));
+                        Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+                        Console.ReadLine();
+
+                        return false;
+                    }
+
+                    if (finalProductCounter > 0)
+                    {
+                        while (true)
+                        {
+                            Console.WriteLine(TextCenter("Ingrese en que almacen desea guardar el producto: "));
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (storagesOptions.Contains(optionSelect))
+                            {
+                                storageSelected = Int32.Parse(optionSelect);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+
+                        List<FinalProduct> finalProducts = new List<FinalProduct>();
+                        List<string> finalProductsOptions = new List<string>();
+                        int finalProductSelected = 0;
+                        int productsQualityCounter = 0;
+
+                        for (int c = 0; c < storages[storageSelected - 1].GetFinalProducts().Count; c++)
+                        {
+
+                            if (storages[storageSelected - 1].GetFinalProducts()[c].GetProduct().GetType() == typeof(Seed))
+                            {
+                                Seed seed = (Seed)storages[storageSelected - 1].GetFinalProducts()[c].GetProduct();
+                                productsQualityCounter++;
+                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + seed.GetName() + " - Calidad :" + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
+
+                                finalProducts.Add(storages[storageSelected - 1].GetFinalProducts()[c]);
+                                finalProductsOptions.Add(productsQualityCounter.ToString());
+                                
+                            }
+
+                            if (storages[storageSelected - 1].GetFinalProducts()[c].GetProduct().GetType() == typeof(Animal))
+                            {
+                                Animal animal = (Animal)storages[storageSelected - 1].GetFinalProducts()[c].GetProduct();
+                                productsQualityCounter++;
+                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + animal.GetName() + " - Calidad :" + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
+
+                                finalProducts.Add(storages[storageSelected - 1].GetFinalProducts()[c]);
+                                finalProductsOptions.Add(productsQualityCounter.ToString());
+                            }
+
+                        }
+
+                        while (true)
+                        {
+                            Console.WriteLine(TextCenter("Ingrese el producto que desea vender: "));
+
+                            string optionSelect = Console.ReadLine();
+
+                            if (finalProductsOptions.Contains(optionSelect))
+                            {
+                                finalProductSelected = Int32.Parse(optionSelect);
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine(TextCenter("Ingrese una opcion valida"));
+                            }
+                        }
+
+                        int quality = finalProducts[finalProductSelected].GetQuality();
+                        int priceProduct = 0;
+
+                        //SE CALCULA EL PRECIO DE VENTA FINAL SEGUN VALOR EN EL MERCADO * CALIDAD
+                        for (int b = 0; b < game.GetMarket().GetPricesProducts().Count; b++)
+                        {
+                            if (game.GetMarket().GetPricesProducts()[b].GetProduct().GetType() == typeof(Animal))
+                            {
+                                Animal animal = (Animal)game.GetMarket().GetPricesProducts()[b].GetProduct();
+
+                                if (finalProducts[finalProductSelected - 1].GetProduct().GetType() == typeof(Animal))
+                                {
+                                    Animal animalFinalProduct = (Animal)finalProducts[finalProductSelected - 1].GetProduct();
+
+                                    if (animalFinalProduct.Equals(animal))
+                                    {
+                                        priceProduct = (game.GetMarket().GetPricesProducts()[b].GetSellPrice() * quality) / 100;
+                                    }
+                                }
+                            }
+                            if (game.GetMarket().GetPricesProducts()[b].GetProduct().GetType() == typeof(Seed))
+                            {
+                                Seed seed = (Seed)game.GetMarket().GetPricesProducts()[b].GetProduct();
+
+                                if (finalProducts[finalProductSelected - 1].GetProduct().GetType() == typeof(Seed))
+                                {
+                                    Seed seedFinalProduct = (Seed)finalProducts[finalProductSelected - 1].GetProduct();
+
+                                    if (seedFinalProduct.Equals(seed))
+                                    {
+                                        priceProduct = (game.GetMarket().GetPricesProducts()[b].GetSellPrice() * quality) / 100;
+                                    }
+                                }
+
+                            }
+                        }
+
+                        Console.WriteLine(TextCenter("----- SU PRODUCTO FUE VENDIDO EXITOSAMENTE -----\n"));
+                        Console.WriteLine(TextCenter("----- PRESIONE ENTER PARA SALIR -----\n"));
+                        Console.ReadLine();
+
+                        game.SellFinalProductStorage(storages[storageSelected - 1], finalProducts[finalProductSelected - 1], priceProduct);
+                        return true;
+
+                    }
+                }
+
+                return false;
+            }
+
+            return false;
+        }
 
 
 
         //--------------------------------------------------------------------------------------------
         //IMPRESION DEL MAPA
         //--------------------------------------------------------------------------------------------
-
 
         public static void RenderMap(Map map)
         {
@@ -1464,7 +2534,6 @@ namespace Farmulator.Classes.nsPrinter
             return;
         }
 
-
         public static void RenderFarmDetails(Map map)
         {
             Terrain[,] terrainsMap = map.GetTerrains();
@@ -1493,7 +2562,7 @@ namespace Farmulator.Classes.nsPrinter
                                 if(counter == 0)
                                 {
                                     Console.Write("\n\n\n");
-                                    Console.WriteLine(TextCenter("ESTADO DE RANCHOS\n"));
+                                    Console.WriteLine(TextCenter("ESTADO DE RANCHOS" + "\n"));
                                     counter = 1;
                                 }
                                 Ranch ranch = (Ranch)terrainsMap[positionX, positionY].GetBuild();
@@ -1531,7 +2600,7 @@ namespace Farmulator.Classes.nsPrinter
                                 if (counter == 0)
                                 {
                                     Console.Write("\n\n\n");
-                                    Console.WriteLine(TextCenter("ESTADO DE PLANTACIONES"));
+                                    Console.WriteLine(TextCenter("ESTADO DE PLANTACIONES" + "\n"));
                                     counter = 1;
                                 }
                                 Land land = (Land)terrainsMap[positionX, positionY].GetBuild();
@@ -1569,7 +2638,7 @@ namespace Farmulator.Classes.nsPrinter
                                 if (counter == 0)
                                 {
                                     Console.Write("\n\n\n");
-                                    Console.WriteLine(TextCenter("ESTADO DE ALMACENES"));
+                                    Console.WriteLine(TextCenter("ESTADO DE ALMACENES" + "\n"));
                                     counter = 1;
                                 }
                                 Storage storage = (Storage)terrainsMap[positionX, positionY].GetBuild();
