@@ -593,7 +593,7 @@ namespace Farmulator.Classes.nsPrinter
 
                             if (selectedTerrain.GetBuild() != null)
                             {
-                                Console.Write(TextCenter("Desea eliminar la granja actual ? : \n"));
+                                Console.Write(TextCenter("Desea eliminar la construccion actual ? : \n"));
                                 Console.Write(TextCenter("1 - Si\n") + TextCenter("2 - No\n"));
 
                                 while (true)
@@ -653,7 +653,9 @@ namespace Farmulator.Classes.nsPrinter
 
                             if (game.GetMoney() < valueBuild)
                             {
-                                Console.Write(TextCenter("Dinero Insuficiente"));
+                                Console.Write(TextCenter("---- NO POSEE DINERO PARA COMPRAR -----"));
+                                Console.Write(TextCenter("PRESIONE ENTER PARA SALIR"));
+                                Console.ReadLine();
                                 return false;
                             }
 
@@ -2135,7 +2137,7 @@ namespace Farmulator.Classes.nsPrinter
                         int positionY = a % 10;
 
                         if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
-                        {
+                        {                            
                             if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Storage))
                             {
                                 Storage storage = (Storage)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
@@ -2245,7 +2247,7 @@ namespace Farmulator.Classes.nsPrinter
                     int positionY = a % 10;
 
                     if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild() != null)
-                    {
+                    {                        
                         if (game.GetMap().GetTerrains()[positionX, positionY].GetBuild().GetType() == typeof(Storage))
                         {
                             Storage storage = (Storage)game.GetMap().GetTerrains()[positionX, positionY].GetBuild();
@@ -2372,7 +2374,7 @@ namespace Farmulator.Classes.nsPrinter
                             }
                         }
 
-                        int quality = finalProducts[finalProductSelected].GetQuality();
+                        int quality = finalProducts[finalProductSelected - 1].GetQuality();
                         int priceProduct = 0;
 
                         //SE CALCULA EL PRECIO DE VENTA FINAL SEGUN VALOR EN EL MERCADO * CALIDAD

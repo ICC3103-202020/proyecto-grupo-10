@@ -65,6 +65,15 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
 
                 this.build = newLand;
             }
+
+            if (build.GetType() == typeof(Storage))
+            {
+                Storage storage = (Storage)build;
+
+                Storage newStorage = new Storage(storage.GetName(), storage.GetBuyPrice(), storage.GetSellPrice(), storage.GetMaxCapacity());
+
+                this.build = newStorage;
+            }
             
         }
 
