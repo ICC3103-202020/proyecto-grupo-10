@@ -2683,7 +2683,7 @@ namespace Farmulator.Classes.nsPrinter
             return tab + text;
         }
 
-        public static bool SaveMenu(Game game)
+        public static bool RenderSaveMenu(Game game)
         {
             Console.WriteLine("\n\n");
             Console.WriteLine(TextCenter("¿Con que nombre desea guardar la partida?"));
@@ -2691,7 +2691,7 @@ namespace Farmulator.Classes.nsPrinter
             {
                 string nameSave = Console.ReadLine();
 
-                string path = "../Savegames/" + nameSave + ".bin";
+                string path = "../../Resources/Savegames/" + nameSave + ".bin";
 
                 if (!File.Exists(path))
                 {
@@ -2718,7 +2718,7 @@ namespace Farmulator.Classes.nsPrinter
 
             List<string> optionsGames = new List<string>();
 
-            DirectoryInfo directoryInfo = new DirectoryInfo("../Savegames");
+            DirectoryInfo directoryInfo = new DirectoryInfo("../../Resources/Savegames");
             FileInfo[] fileGamesSaved = directoryInfo.GetFiles();
             int counter = 0;
             Console.WriteLine("\n\n");
@@ -2729,6 +2729,15 @@ namespace Farmulator.Classes.nsPrinter
                 Console.WriteLine(TextCenter(counter.ToString() + " - " + fileGamesSaved[i].ToString()));
 
                 optionsGames.Add(counter.ToString());
+            }
+
+            if(counter == 0)
+            {
+                Console.WriteLine(TextCenter("----- NO EXISTEN PARTIDAS PARA CARGAR -----"));
+                Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+
+                Console.ReadLine();
+                return null;
             }
 
             while (true)

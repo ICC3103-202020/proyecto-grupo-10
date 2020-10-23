@@ -76,11 +76,17 @@ namespace Farmulator.Classes.nsMenu
                         break;
                     case 2:
 
-                        LoadGameMenu();
+                        bool request = LoadGameMenu();
 
-                        GameMenu();
-
-                        break;
+                        if(request == true)
+                        {
+                            GameMenu();
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
 
                     case 3:
                         OptionsMenu();
@@ -156,7 +162,7 @@ namespace Farmulator.Classes.nsMenu
             }
         }
 
-        private static void LoadGameMenu()
+        private static bool LoadGameMenu()
         {
 
             string titleLoadGame = "\n\n\n\n" +
@@ -177,14 +183,22 @@ namespace Farmulator.Classes.nsMenu
 
             string nameFile = Print.RenderLoadMenu(titleLoadGame);
 
-            IFormatter formatter = new BinaryFormatter();
-            string path = "../Savegames/" + nameFile;
-            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            game = (Game)formatter.Deserialize(stream);
+            if (nameFile == null)
+            {
+                return false;
+            }
+            else
+            {
+                IFormatter formatter = new BinaryFormatter();
+                string path = "../../Resources/Savegames/" + nameFile;
+                Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                game = (Game)formatter.Deserialize(stream);
 
-            stream.Close();
+                stream.Close();
 
-            return;
+                return true;
+            }
+
         }
 
         private static void OptionsMenu()
@@ -228,7 +242,7 @@ namespace Farmulator.Classes.nsMenu
                         requestMenu = true;
                         break;
                     case 4:
-                        requestMenu = Print.SaveMenu(game);
+                        requestMenu = Print.RenderSaveMenu(game);
                         break;
                     case 5:
                         return true;

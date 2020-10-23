@@ -279,7 +279,7 @@ namespace Farmulator.Classes.nsGame
         {
 
             BinaryFormatter formatter = new BinaryFormatter();
-            string path = "../Savegames/" + name +".bin";
+            string path = "../../Resources/Savegames/" + name +".bin";
             Stream stream = new FileStream( path, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, game);
             stream.Close();
