@@ -11,9 +11,14 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using Farmulator.Classes.nsGame.nsMarket;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Farmulator.Classes.nsGame
 {
+    [Serializable]
     class Game
     {
         private int turn;
@@ -256,6 +261,7 @@ namespace Farmulator.Classes.nsGame
             else
             {
                 this.money += price;
+                terrain.Destroy();
                 return;
             }
         }
@@ -269,13 +275,17 @@ namespace Farmulator.Classes.nsGame
             return;
         }
 
-        public bool SaveGame()
+        public bool SaveGame(Game game, string name)
         {
-            return true;
-        }
 
-        public bool LoadGame()
-        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            string path = "../Savegames/" + name +".bin";
+            Stream stream = new FileStream( path, FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, game);
+            stream.Close();
+
+            this.saveDate = DateTime.Now;
+
             return true;
         }
 

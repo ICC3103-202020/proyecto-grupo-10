@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables
 {
+    [Serializable]
     class Herbicide : Consumable
     {
         public Herbicide(string name, string description)

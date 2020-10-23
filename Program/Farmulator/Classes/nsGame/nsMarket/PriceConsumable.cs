@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMarket
 {
+    [Serializable]
     class PriceConsumable
     {
         private Consumable consumable;

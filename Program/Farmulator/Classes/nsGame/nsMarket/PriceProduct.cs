@@ -7,6 +7,7 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProduc
 
 namespace Farmulator.Classes.nsGame.nsMarket
 {
+    [Serializable]
     class PriceProduct
     {
         private Product product;

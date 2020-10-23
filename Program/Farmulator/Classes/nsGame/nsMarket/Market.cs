@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMarket
 {
+    [Serializable]
     class Market
     {
         private List<PriceProduct> pricesProducts;

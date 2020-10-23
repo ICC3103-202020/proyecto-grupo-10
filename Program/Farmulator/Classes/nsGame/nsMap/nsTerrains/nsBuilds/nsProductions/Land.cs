@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
 {
+    [Serializable]
     class Land:Production
     {
         private Seed seed;

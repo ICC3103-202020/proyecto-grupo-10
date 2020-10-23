@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsAssets
 {
+    [Serializable]
     class Lake
     {
         private List<int[]> positions;

@@ -8,10 +8,12 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts;
 using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts.nsConsumables;
 using Farmulator.Classes.nsGame.nsMarket;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -2265,7 +2267,7 @@ namespace Farmulator.Classes.nsPrinter
                                 {
                                     Seed seed = (Seed)storage.GetFinalProducts()[b].GetProduct();
 
-                                    Console.WriteLine(TextCenter(" - " + seed.GetName() + " - Calidad :" + storage.GetFinalProducts()[b].GetQuality().ToString()));
+                                    Console.WriteLine(TextCenter(" - " + seed.GetName() + " - Calidad : " + storage.GetFinalProducts()[b].GetQuality().ToString()));
                                     finalProductCounter++;
                                 }
 
@@ -2273,7 +2275,7 @@ namespace Farmulator.Classes.nsPrinter
                                 {
                                     Animal animal = (Animal)storage.GetFinalProducts()[b].GetProduct();
 
-                                    Console.WriteLine(TextCenter(" - " + animal.GetName() + " - Calidad :" + storage.GetFinalProducts()[b].GetQuality().ToString()));
+                                    Console.WriteLine(TextCenter(" - " + animal.GetName() + " - Calidad : " + storage.GetFinalProducts()[b].GetQuality().ToString()));
                                     finalProductCounter++;
                                 }
 
@@ -2338,7 +2340,7 @@ namespace Farmulator.Classes.nsPrinter
                             {
                                 Seed seed = (Seed)storages[storageSelected - 1].GetFinalProducts()[c].GetProduct();
                                 productsQualityCounter++;
-                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + seed.GetName() + " - Calidad :" + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
+                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + seed.GetName() + " - Calidad : " + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
 
                                 finalProducts.Add(storages[storageSelected - 1].GetFinalProducts()[c]);
                                 finalProductsOptions.Add(productsQualityCounter.ToString());
@@ -2349,7 +2351,7 @@ namespace Farmulator.Classes.nsPrinter
                             {
                                 Animal animal = (Animal)storages[storageSelected - 1].GetFinalProducts()[c].GetProduct();
                                 productsQualityCounter++;
-                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + animal.GetName() + " - Calidad :" + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
+                                Console.WriteLine(TextCenter(productsQualityCounter.ToString() + " - " + animal.GetName() + " - Calidad : " + storages[storageSelected - 1].GetFinalProducts()[c].GetQuality().ToString()));
 
                                 finalProducts.Add(storages[storageSelected - 1].GetFinalProducts()[c]);
                                 finalProductsOptions.Add(productsQualityCounter.ToString());
@@ -2672,12 +2674,79 @@ namespace Farmulator.Classes.nsPrinter
             }
 
         }
+
         private static string TextCenter(string text)
         {
             int spaces = 100 - (text.Length / 2);
             string tab = new string(' ', spaces);
 
             return tab + text;
+        }
+
+        public static bool SaveMenu(Game game)
+        {
+            Console.WriteLine("\n\n");
+            Console.WriteLine(TextCenter("¿Con que nombre desea guardar la partida?"));
+            while (true)
+            {
+                string nameSave = Console.ReadLine();
+
+                string path = "../Savegames/" + nameSave + ".bin";
+
+                if (!File.Exists(path))
+                {
+                    game.SaveGame(game, nameSave);
+
+                    Console.WriteLine(TextCenter("----- LA PARTIDA FUE GUARDADA EXITOSAMENTE -----"));
+                    Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
+
+                    Console.ReadLine();
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine(TextCenter("----- YA EXISTE UNA PARTIDA GUARDADA CON ESTEN NOMBRE -----"));
+                    Console.WriteLine(TextCenter("Ingrese un nuevo nombre"));
+                }
+            }
+
+        }
+
+        public static string RenderLoadMenu(String title)
+        {
+            Console.WriteLine(title);
+
+            List<string> optionsGames = new List<string>();
+
+            DirectoryInfo directoryInfo = new DirectoryInfo("../Savegames");
+            FileInfo[] fileGamesSaved = directoryInfo.GetFiles();
+            int counter = 0;
+            Console.WriteLine("\n\n");
+
+            for(int i = 0; i < fileGamesSaved.Length; i++)
+            {
+                counter++;
+                Console.WriteLine(TextCenter(counter.ToString() + " - " + fileGamesSaved[i].ToString()));
+
+                optionsGames.Add(counter.ToString());
+            }
+
+            while (true)
+            {
+                Console.WriteLine(TextCenter("Ingrese la partida que desea cargar : "));
+
+                string optionSelect = Console.ReadLine();
+
+                if (optionsGames.Contains(optionSelect))
+                {
+                    return fileGamesSaved[Int32.Parse(optionSelect) - 1].ToString();
+                }
+                else
+                {
+                    Console.WriteLine(TextCenter("Ingrese una opcion valida\n"));
+                }
+            }
+
         }
     }
 }

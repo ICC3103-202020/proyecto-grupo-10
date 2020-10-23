@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
 {
+    [Serializable]
     class Storage:Build
     {
         private int maxCapacity;

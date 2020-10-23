@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsAssets
 {
+    [Serializable]
     class Farm
     {
         private List<Terrain> terrains;

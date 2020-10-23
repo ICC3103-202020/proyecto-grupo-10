@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions.nsProducts
 {
+    [Serializable]
     class Seed:Product
     {
         private int nutrientsConsumption;

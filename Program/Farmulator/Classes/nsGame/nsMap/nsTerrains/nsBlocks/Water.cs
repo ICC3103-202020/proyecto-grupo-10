@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks
 {
+    [Serializable]
     class Water:Block
     {
         //CONSTRUCTOR

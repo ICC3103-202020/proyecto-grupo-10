@@ -4,6 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Farmulator.Classes.nsGame;
 using Farmulator.Classes.nsPrinter;
 
@@ -72,8 +75,13 @@ namespace Farmulator.Classes.nsMenu
                         NewGameMenu();
                         break;
                     case 2:
+
                         LoadGameMenu();
+
+                        GameMenu();
+
                         break;
+
                     case 3:
                         OptionsMenu();
                         break;
@@ -151,6 +159,32 @@ namespace Farmulator.Classes.nsMenu
         private static void LoadGameMenu()
         {
 
+            string titleLoadGame = "\n\n\n\n" +
+                    "                                                      ╔══╗                                             ╔═══════════╗\n" +
+                    "                                                      ║  ║                                             ║  ╔═════╗  ║\n" +
+                    "                                                      ║  ║                                             ║  ║     ╚══╝\n" +
+                    "                                                      ║  ║                                             ║  ║\n" +
+                    "                                                      ║  ║                                             ║  ║\n" +
+                    "                                                      ║  ║          ╔══════╗ ╔══════╗ ╔═════╗          ║  ║  ╔═════╗ ╔══════╗ ╔══╗   ╔══╗ ╔══════╗\n" +
+                    "                                                      ║  ║          ║  ╔╗  ║ ║  ╔╗  ║ ║  ╔╗ ╚╗         ║  ║  ╚══╗  ║ ║  ╔╗  ║ ║  ╚╗ ╔╝  ║ ║  ╔═══╝\n" +
+                    "                                                      ║  ║          ║  ║║  ║ ║  ║║  ║ ║  ║║  ║         ║  ║     ║  ║ ║  ║║  ║ ║   ╚═╝   ║ ║  ╚══╗\n" +
+                    "                                                      ║  ║          ║  ║║  ║ ║  ╚╝  ║ ║  ║║  ║         ║  ║     ║  ║ ║  ╚╝  ║ ║  ╠╗ ╔╣  ║ ║  ╔══╝\n" +
+                    "                                                      ║  ╚════════╗ ║  ╚╝  ║ ║  ╔╗  ║ ║  ╚╝ ╔╝         ║  ╚═════╝  ║ ║  ╔╗  ║ ║  ║╚╦╝║  ║ ║  ╚═══╗\n" +
+                    "                                                      ╚═══════════╝ ╚══════╝ ╚══╝╚══╝ ╚═════╝          ╚═══════════╝ ╚══╝╚══╝ ╚══╝   ╚══╝ ╚══════╝\n" +
+                    "\n\n\n\n";
+
+
+
+            string nameFile = Print.RenderLoadMenu(titleLoadGame);
+
+            IFormatter formatter = new BinaryFormatter();
+            string path = "../Savegames/" + nameFile;
+            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            game = (Game)formatter.Deserialize(stream);
+
+            stream.Close();
+
+            return;
         }
 
         private static void OptionsMenu()
@@ -194,7 +228,7 @@ namespace Farmulator.Classes.nsMenu
                         requestMenu = true;
                         break;
                     case 4:
-
+                        requestMenu = Print.SaveMenu(game);
                         break;
                     case 5:
                         return true;

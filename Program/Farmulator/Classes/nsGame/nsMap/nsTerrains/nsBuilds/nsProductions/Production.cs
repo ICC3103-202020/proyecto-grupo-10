@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
 {
+    [Serializable]
     abstract class Production:Build
     {
         protected int health;

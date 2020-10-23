@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds
 {
+    [Serializable]
     abstract class Build
     {
         protected string name;

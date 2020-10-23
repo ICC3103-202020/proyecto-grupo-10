@@ -10,6 +10,7 @@ using Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks;
 
 namespace Farmulator.Classes.nsGame.nsMap
 {
+    [Serializable]
     class Map
     {
         private Terrain[,] terrains;
