@@ -65,7 +65,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsAssets
                     this.positions.Add(blockPosition);
                 }
 
-                int nextPositionX = rnd.Next( xPosition - 2 , xPosition + 3 );
+                int nextPositionX = rnd.Next( xPosition - 1 , xPosition + 2 );
 
                 if(nextPositionX > 97 || nextPositionX < 3)
                 {

@@ -12,9 +12,12 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks
         private int quality;
 
         //CONSTRUCTOR
-        public Earth()
+        public Earth(float altitude, int temperature, int rainfall)
         {
-            this.quality = CalculateQuality();
+            float altitudex100 = altitude * (100 + (rainfall * 40 / 100) - (temperature * 40 / 100));
+            int altitudeInt = (int)altitudex100;
+
+            this.quality = altitudeInt;
             this.workable = true;
         }
 
@@ -29,14 +32,8 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBlocks
             return this.quality;
         }
 
+
         //METODOS
-        private int CalculateQuality()
-        {
-            Random rnd = new Random();
 
-            int quality = rnd.Next(25,100);
-
-            return quality;
-        }
     }
 }

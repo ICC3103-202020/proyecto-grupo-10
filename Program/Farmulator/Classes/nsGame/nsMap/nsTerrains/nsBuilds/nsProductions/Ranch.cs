@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
 {
@@ -14,9 +15,11 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         private Animal animal;
         private int food;
         private int quantity;
+        private Bitmap bitmap;
 
-        public Ranch(string name, int buyPrice, int sellPrice, int health, int water, int maturity, int finalProduction, bool disease, Animal animal, int food, int quantity)
+        public Ranch(Bitmap bitmap,  string name, int buyPrice, int sellPrice, int health, int water, int maturity, int finalProduction, bool disease, Animal animal, int food, int quantity)
         {
+            this.bitmap = bitmap;
             this.name = name;
             this.buyPrice = buyPrice;
             this.sellPrice = sellPrice;
@@ -31,6 +34,10 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains.nsBuilds.nsProductions
         }
 
         //ACCESO
+        public Bitmap GetImg()
+        {
+            return this.bitmap;
+        }
         public string GetName()
         {
             return this.name;

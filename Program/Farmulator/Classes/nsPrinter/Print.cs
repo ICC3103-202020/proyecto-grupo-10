@@ -20,11 +20,22 @@ using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Farmulator.Classes.nsPrinter
 {
     static class Print
     {
+        private static Bitmap terrainAssets;
+        private static List<Bitmap> grass;
+        private static List<Bitmap> grassDirt;
+        private static List<Bitmap> dirt;
+        private static List<Bitmap> mediumGrass;
+        private static List<Bitmap> highGrass;
+        private static List<Bitmap> land;
+        private static List<Bitmap> water;
+
+
         public static int RenderMenu(List<string> options, string title, bool subMenu = false)
         {
             Console.WriteLine(title);
@@ -2683,32 +2694,21 @@ namespace Farmulator.Classes.nsPrinter
             return tab + text;
         }
 
-        public static bool RenderSaveMenu(Game game)
+        public static bool RenderSaveMenu(Game game, string nameSave)
         {
-            Console.WriteLine("\n\n");
-            Console.WriteLine(TextCenter("¿Con que nombre desea guardar la partida?"));
-            while (true)
+            string path = "../../Resources/Savegames/" + nameSave + ".bin";
+
+            if (!File.Exists(path))
             {
-                string nameSave = Console.ReadLine();
+                game.SaveGame(game, nameSave);
 
-                string path = "../../Resources/Savegames/" + nameSave + ".bin";
-
-                if (!File.Exists(path))
-                {
-                    game.SaveGame(game, nameSave);
-
-                    Console.WriteLine(TextCenter("----- LA PARTIDA FUE GUARDADA EXITOSAMENTE -----"));
-                    Console.WriteLine(TextCenter("PRESIONE ENTER PARA SALIR"));
-
-                    Console.ReadLine();
-                    return false;
-                }
-                else
-                {
-                    Console.WriteLine(TextCenter("----- YA EXISTE UNA PARTIDA GUARDADA CON ESTEN NOMBRE -----"));
-                    Console.WriteLine(TextCenter("Ingrese un nuevo nombre"));
-                }
+                return true;
             }
+            else
+            {
+                return false;
+            }
+            
 
         }
 
@@ -2756,6 +2756,927 @@ namespace Farmulator.Classes.nsPrinter
                 }
             }
 
+        }
+
+
+        //-----------------------------------------------------------------------------------------------
+        //METODOS DE FORMULARIOS
+        //-----------------------------------------------------------------------------------------------
+
+        public static Bitmap RenderImgMap(Game game)
+        {
+            //CREAMOS UN MAPA PROVISORIO
+
+            Block[,] blockMap = new Block[100,100];
+
+            Map map = game.GetMap();
+
+            //------------------------------------
+
+            Random rnd = new Random();
+
+            //RECORREMOS EL MAPA CON TERRENOS Y LO PASAMOS A UNO SOLO CON BLOQUES
+            for (int i = 0; i < 100; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                 
+                    if (map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Water)))
+                    {
+                        Water water = (Water)map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10];
+                        blockMap[i, j] = water;
+                    }
+
+                    if (map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Earth)))
+                    {
+                        Earth earth = (Earth)map.GetTerrains()[i / 10, j / 10].GetBlocks()[i % 10, j % 10];
+                        blockMap[i, j] = earth;
+
+                    }
+                }
+            }
+
+            //CREAMOS EL MAPA DE BIT
+
+            Bitmap imgMap = new Bitmap(1000, 1000);
+
+            Graphics g = Graphics.FromImage(imgMap);
+
+            //ESTABLECEMOS A LAS DISTANCIAS QUE ESTARAN LOS TILE
+            int xPosition = 10;
+            int yPosition = 10;
+
+            //RECORREMOS EL MAPA PROVISORIO PARA DETERMINAR QUE TILE DEBE IR EN CADA BLOQUE
+
+            for(int y = 0; y < 100; y++)
+            {
+                for(int x = 0; x < 100; x++)
+                {
+                    ////SISTEMA DE TECLADO NUMERICO PARA DETERMINAR LOS BLOQUES ADYACENTES AL QUE NOS ENCONTRAMOS
+
+                    //int one = 0;
+                    //int two = 0;
+                    //int three = 0;
+                    //int four = 0;
+                    int five = 0;
+                    //int six = 0;
+                    //int seven = 0;
+                    //int eight = 0;
+                    //int nine = 0;
+
+                    ////POSIBLES CASOS
+                    //// 1 = AGUA
+                    //// 2 = TIERRA
+                    //// 3 = PASTO
+                    //// 4 = PASTO LARGO
+
+                    ////DETERMINAMOS POSICION 4
+                    //if (x > 0)
+                    //{
+                    //    if (blockMap[y, x - 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        four = 1;
+                    //    }
+                    //    if (blockMap[y, x - 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y, x - 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if( quality <= 25 && quality > 0) 
+                    //        {
+                    //            four = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            four = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            four = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 6
+
+                    //if (x < 99)
+                    //{
+                    //    if (blockMap[y, x + 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        six = 1;
+                    //    }
+                    //    if (blockMap[y, x + 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y, x + 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            six = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            six = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            six = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 8
+
+                    //if (y > 0)
+                    //{
+                    //    if (blockMap[y - 1, x].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        eight = 1;
+                    //    }
+                    //    if (blockMap[y - 1, x].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y - 1, x];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            eight = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            eight = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            eight = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 2
+
+                    //if (y < 99)
+                    //{
+                    //    if (blockMap[y + 1, x].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        two = 1;
+                    //    }
+                    //    if (blockMap[y + 1, x].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y + 1, x];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            two = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            two = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            two = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 7
+
+                    //if (x > 0 && y > 0)
+                    //{
+                    //    if (blockMap[y - 1, x - 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        seven = 1;
+                    //    }
+                    //    if (blockMap[y - 1, x - 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y - 1, x - 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            seven = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            seven = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            seven = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 3
+
+                    //if (x < 99 && y < 99)
+                    //{
+                    //    if (blockMap[y + 1, x + 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        three = 1;
+                    //    }
+                    //    if (blockMap[y + 1, x + 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y + 1, x + 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            three = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            three = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            three = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 1
+
+                    //if (x > 0 && y < 99)
+                    //{
+                    //    if (blockMap[y + 1, x - 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        one = 1;
+                    //    }
+                    //    if (blockMap[y + 1, x - 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y + 1, x - 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            one = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            one = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            one = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    ////DETERMINAMOS POSICION 9
+
+                    //if (x < 99 && y > 0)
+                    //{
+                    //    if (blockMap[y - 1, x + 1].GetType().Equals(typeof(Water)))
+                    //    {
+                    //        nine = 1;
+                    //    }
+                    //    if (blockMap[y - 1, x + 1].GetType().Equals(typeof(Earth)))
+                    //    {
+                    //        Earth earth = (Earth)blockMap[y - 1, x + 1];
+                    //        int quality = earth.GetQuality();
+
+                    //        if (quality <= 25 && quality > 0)
+                    //        {
+                    //            nine = 2;
+                    //        }
+                    //        if (quality <= 75 && quality > 25)
+                    //        {
+                    //            nine = 3;
+                    //        }
+                    //        if (quality <= 100 && quality > 75)
+                    //        {
+                    //            nine = 4;
+                    //        }
+                    //    }
+                    //}
+
+                    //DETERMINAMOS EL 5
+
+                    if (blockMap[y , x].GetType().Equals(typeof(Water)))
+                    {
+                        five = 1;
+                    }
+
+                    if (blockMap[y, x].GetType().Equals(typeof(Earth)))
+                    {
+                        Earth earth = (Earth)blockMap[y , x ];
+                        int quality = earth.GetQuality();
+
+                        if (quality <= 25 )
+                        {
+                            five = 2;
+                        }
+                        else if (quality <= 50 )
+                        {
+                            five = 3;
+                        }
+                        else if (quality <= 75 )
+                        {
+                            five = 4;
+                        }
+                        else
+                        {
+                            five = 5;
+                        }
+
+                    }
+
+                    //DETERMINAMOS SI ES PARTE DE LA GRANJA
+
+                    int alpha = 200;
+
+                    if(map.GetFarm().GetTerrains().Contains(map.GetTerrains()[y / 10, x / 10]))
+                    {
+                        alpha = 150;
+                    }
+                    //---------------------------------------------------------------------
+
+                    Color color = Color.FromArgb(255, 255, 255);
+
+
+                    for (int pixelX = 0; pixelX < 10; pixelX++)
+                    {
+
+                        for (int pixelY = 0; pixelY < 10; pixelY++)
+                        {
+                           
+                            if (five == 1)
+                            {
+                                color = Color.FromArgb(alpha, 57, 114, 171);
+                            }
+
+                            if (five == 2)
+                            {
+                                color = Color.FromArgb(alpha, 234, 255, 127);
+                            }
+
+                            if (five == 3)
+                            {
+                                color = Color.FromArgb(alpha, 94, 165, 51);
+                            }
+
+                            if (five == 4)
+                            {
+                                color = Color.FromArgb(alpha, 70,128,34);
+                            }
+
+                            if (five == 5)
+                            {
+                                color = Color.FromArgb(alpha,54, 102, 25);
+                            }
+
+                            
+
+                            imgMap.SetPixel((xPosition * x) + pixelX, (yPosition * y) + pixelY , color);
+
+                        }  
+                    }
+
+
+                    //AGUA
+
+                    //if (five == 1)
+                    //{
+                    //    //AGUA
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(water[4], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //AGUA UNION
+                    //    //1
+                    //    if ((one == 2) && (two == 2) && (three == 2 || three == 1 || three == 0) && (four == 2) && (six == 1 || six == 0) && (seven == 2 || seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[0], xPosition * x, yPosition * y);
+                    //    }
+                    //    //2
+                    //    if ((one == 2 || one == 1 || one == 0) && (two == 2 || two == 0) && (three == 2 || three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[1], xPosition * x, yPosition * y);
+                    //    }
+                    //    //3
+                    //    if ((one == 2 || one == 1 || one == 0) && (two == 2) && (three == 2) && (four == 1 || four == 0) && (six == 2) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 2 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[2], xPosition * x, yPosition * y);
+                    //    }
+                    //    //4
+                    //    if ((one == 2 || one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 2) && (six == 1 || six == 0) && (seven == 2 || seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[3], xPosition * x, yPosition * y);
+                    //    }
+                    //    //SE OMITE EL 5 SOLO ES PASTO
+
+                    //    //6
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 2 || three == 1 || three == 0) && (four == 1 || four == 0) && (six == 2) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 2 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[5], xPosition * x, yPosition * y);
+                    //    }
+                    //    //7
+                    //    if ((one == 2 || one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 2) && (six == 1 || six == 0) && (seven == 2) && (eight == 2) && (nine == 2 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[6], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //8
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 2 || seven == 1 || seven == 0) && (eight == 2) && (nine == 2 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[7], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //9
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 2 || three == 0) && (four == 1 || four == 0) && (six == 2) && (seven == 2 || seven == 1 || seven == 0) && (eight == 2) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[8], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //10
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[9], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //11
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 2) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[10], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //12
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 2) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[11], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //13
+                    //    if ((one == 2) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[12], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //CUANDO SE ENCUENTRA SOLO
+                    //    //IZQUIERDA
+                    //    if ((one == 2) && (two == 2) && (three == 1 || three == 0) && (four == 2) && (six == 1 || six == 0) && (seven == 2) && (eight == 2) && (nine == 1 || nine == 0))
+                    //    {
+                    //        int waterType = rnd.Next(0, 2);
+
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 2) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1) && (six == 1 || six == 0) && (seven == 2) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[3], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //DERECHA
+                    //    if ((one == 1 || one == 0) && (two == 2) && (three == 2) && (four == 1 || four == 0) && (six == 2) && (seven == 1 || seven == 0) && (eight == 2) && (nine == 2))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 2) && (four == 1 || four == 0) && (six == 1) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[5], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //ARRIBA
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 2) && (six == 2) && (seven == 2) && (eight == 2) && (nine == 2))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 2) && (eight == 1) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[7], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //ABAJO
+                    //    if ((one == 2) && (two == 2) && (three == 2) && (four == 2) && (six == 2) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 2) && (two == 1) && (three == 2) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[1], xPosition * x, yPosition * y);
+                    //    }
+
+
+                    //    //UNION CON PASTO
+                    //    //-------------------------------------------
+                    //    //-------------------------------------------
+                    //    //1
+                    //    if ((one == 3) && (two == 3) && (three == 3 || three == 1 || three == 0) && (four == 3) && (six == 1 || six == 0) && (seven == 3 || seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[0], xPosition * x, yPosition * y);
+                    //    }
+                    //    //2
+                    //    if ((one == 3 || one == 1 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[1], xPosition * x, yPosition * y);
+                    //    }
+                    //    //3
+                    //    if ((one == 3 || one == 1 || one == 0) && (two == 3) && (three == 3) && (four == 1 || four == 0) && (six == 3) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 3 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[2], xPosition * x, yPosition * y);
+                    //    }
+                    //    //4
+                    //    if ((one == 3 || one == 1 || one == 2 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 3) && (six == 1 || six == 0) && (seven == 3 || seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        if (one == 2 && seven == 3)
+                    //        {
+                    //            g.DrawImage(dirt[1], xPosition * x, yPosition * y);
+                    //            g.DrawImage(grassDirt[1], xPosition * x, yPosition * y);
+                    //            g.DrawImage(water[3], xPosition * x, yPosition * y);
+                    //        }
+
+                    //        else
+                    //        {
+                    //            g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //            g.DrawImage(water[3], xPosition * x, yPosition * y);
+                    //        }
+
+                    //    }
+                    //    //SE OMITE EL 5 SOLO ES PASTO
+
+                    //    //6
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 3 || three == 1 || three == 0) && (four == 1 || four == 0) && (six == 3) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 3 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[5], xPosition * x, yPosition * y);
+                    //    }
+                    //    //7
+                    //    if ((one == 3 || one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 3) && (six == 1 || six == 0) && (seven == 3) && (eight == 3) && (nine == 3 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[6], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //8
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 3 || seven == 1 || seven == 0) && (eight == 3) && (nine == 3 || nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[7], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //9
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 3 || three == 0) && (four == 1 || four == 0) && (six == 3) && (seven == 3 || seven == 1 || seven == 0) && (eight == 3) && (nine == 3))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[8], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //10
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 3))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[9], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //11
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 3) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[10], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //12
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 3) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[11], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //13
+                    //    if ((one == 3) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[12], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //CUANDO SE ENCUENTRA SOLO
+                    //    //IZQUIERDA
+                    //    if ((one == 3) && (two == 3) && (three == 1 || three == 0) && (four == 3) && (six == 1 || six == 0) && (seven == 3) && (eight == 3) && (nine == 1 || nine == 0))
+                    //    {
+                    //        int waterType = rnd.Next(0, 2);
+
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 3) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1) && (six == 1 || six == 0) && (seven == 3) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[3], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //DERECHA
+                    //    if ((one == 1 || one == 0) && (two == 3) && (three == 3) && (four == 1 || four == 0) && (six == 3) && (seven == 1 || seven == 0) && (eight == 3) && (nine == 3))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 3) && (four == 1 || four == 0) && (six == 1) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 3))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[5], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //ARRIBA
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 3) && (six == 3) && (seven == 3) && (eight == 3) && (nine == 3))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 1 || one == 0) && (two == 1 || two == 0) && (three == 1 || three == 0) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 3) && (eight == 1) && (nine == 3))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[7], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //ABAJO
+                    //    if ((one == 3) && (two == 3) && (three == 3) && (four == 3) && (six == 3) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        int waterType = rnd.Next(0, 1);
+
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[13 + waterType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    if ((one == 3) && (two == 1) && (three == 3) && (four == 1 || four == 0) && (six == 1 || six == 0) && (seven == 1 || seven == 0) && (eight == 1 || eight == 0) && (nine == 1 || nine == 0))
+                    //    {
+                    //        g.DrawImage(grass[1], xPosition * x, yPosition * y);
+                    //        g.DrawImage(water[1], xPosition * x, yPosition * y);
+                    //    }
+
+                    //}
+
+                    ////TIERRA
+
+                    //if (five == 2)
+                    //{
+                    //    int dirtType = rnd.Next(0, 3);
+
+                    //    g.DrawImage(dirt[dirtType], xPosition * x, yPosition * y);
+                    //}
+
+                    ////PASTO
+
+                    //if (five == 3)
+                    //{
+                    //    //PASTO
+                    //    if ((one == 3 || one == 1 || one == 0) && (two == 3 || two == 1 || two == 0) && (three == 3 || three == 1 || three == 0) && (four == 3 || four == 1 || four == 0) && (six == 3 || six == 1 || six == 0) && (seven == 3 || seven == 1 || seven == 0) && (eight == 3 || eight == 1 || eight == 0) && (nine == 3 || nine == 1 || nine == 0))
+                    //    {
+                    //        int grassType = rnd.Next(0, 3);
+
+                    //        g.DrawImage(grass[grassType], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //PASTO UNION TIERRA
+                    //    //1
+                    //    if ((one == 2) && (two == 2) && (three == 2 || three == 3 || three == 0) && (four == 2) && (six == 3 || six == 0) && (seven == 2 || seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[0], xPosition * x, yPosition * y);
+                    //    }
+                    //    //2
+                    //    if ((one == 1 || one == 2 || one == 3 || one == 0) && (two == 2 || two == 0) && (three == 1 || three == 2 || three == 3 || three == 0) && (four == 1 || four == 3 || four == 0) && (six == 1 || six == 3 || six == 0) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[1], xPosition * x, yPosition * y);
+                    //    }
+                    //    //3
+                    //    if ((one == 2 || one == 3 || one == 0) && (two == 2) && (three == 2) && (four == 3 || four == 0) && (six == 2) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 2 || nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[2], xPosition * x, yPosition * y);
+                    //    }
+                    //    //4
+                    //    if ((one == 2 || one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 2) && (six == 3 || six == 0) && (seven == 2 || seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[3], xPosition * x, yPosition * y);
+                    //    }
+                    //    //SE OMITE EL 5 SOLO ES PASTO
+
+                    //    //6
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 2 || three == 3 || three == 0) && (four == 3 || four == 0) && (six == 2) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 2 || nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[5], xPosition * x, yPosition * y);
+                    //    }
+                    //    //7
+                    //    if ((one == 2 || one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 2) && (six == 3 || six == 0) && (seven == 2) && (eight == 2) && (nine == 2 || nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[6], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //8
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 3 || four == 0) && (six == 3 || six == 0) && (seven == 2 || seven == 3 || seven == 0) && (eight == 2) && (nine == 2 || nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[7], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //9
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 2 || three == 0) && (four == 3 || four == 0) && (six == 2) && (seven == 2 || seven == 3 || seven == 0) && (eight == 2) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[8], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //10
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 3 || four == 0) && (six == 3 || six == 0) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 2))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[9], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //11
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 3 || four == 0) && (six == 3 || six == 0) && (seven == 2) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[10], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //12
+                    //    if ((one == 3 || one == 0) && (two == 3 || two == 0) && (three == 2) && (four == 3 || four == 0) && (six == 3 || six == 0) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[11], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //13
+                    //    if ((one == 2) && (two == 3 || two == 0) && (three == 3 || three == 0) && (four == 3 || four == 0) && (six == 3 || six == 0) && (seven == 3 || seven == 0) && (eight == 3 || eight == 0) && (nine == 3 || nine == 0))
+                    //    {
+                    //        g.DrawImage(dirt[2], xPosition * x, yPosition * y);
+                    //        g.DrawImage(grassDirt[12], xPosition * x, yPosition * y);
+                    //    }
+
+
+
+                    //}
+
+                    ////PASTO LARGO
+
+                    //if (five == 4)
+                    //{
+                    //    //PASTO LARGO
+                    //    if ((one == 4 || one == 0) && (two == 4 || two == 0) && (three == 4 || three == 0) && (four == 4 || four == 0) && (six == 4 || six == 0) && (seven == 4 || seven == 0) && (eight == 4 || eight == 0) && (nine == 4 || nine == 0))
+                    //    {
+                    //        g.DrawImage(mediumGrass[4], xPosition * x, yPosition * y);
+                    //    }
+
+                    //    //1
+                    //    if ((one == 2))
+                    //    {
+
+                    //    }
+                    //}
+                }
+            }
+
+            g.Dispose();
+            return imgMap;
+        }
+
+        public static void CreateAssets()
+        {
+            string pathTerrainsAssets = "../../Resources/Assets/terrain_assets.png";
+
+            terrainAssets = new Bitmap(pathTerrainsAssets);
+
+            int widthAsset = 32;
+            int heightAsset = 32;
+
+            int xPosition = 32;
+            int yPosition = 32;
+
+
+            grass = new List<Bitmap>() {CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 0, yPosition * 11),
+                                           CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 11),
+                                           CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 11) };
+
+            dirt = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 0, yPosition * 5),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 5),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 5)};
+
+            grassDirt = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 0, yPosition * 10),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 10) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 10) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 0, yPosition * 9) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 9) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 9) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 0, yPosition * 8) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 8) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 8),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 7) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 7) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 6),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 6) };
+
+            mediumGrass = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 12, yPosition * 10), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 13, yPosition * 10) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 14, yPosition * 10) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 12, yPosition * 9) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 13, yPosition * 9) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 14, yPosition * 9) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 12, yPosition * 8) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 13, yPosition * 8) , 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 14, yPosition * 8) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 13, yPosition * 7) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 14, yPosition * 7) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 13, yPosition * 6) ,
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 14, yPosition * 6) };
+
+            highGrass = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 28), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 28), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 28), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 27), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 27), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 27), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 26), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 26), 
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 26),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 1, yPosition * 25),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 2, yPosition * 25),
+                                                CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 25) };
+
+            land = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 22), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 4, yPosition * 22), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 5, yPosition * 22), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 21), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 4, yPosition * 21), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 5, yPosition * 21), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 3, yPosition * 20), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 4, yPosition * 20), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 5, yPosition * 20) };
+
+            water = new List<Bitmap>() { CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 27, yPosition * 4), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 28, yPosition * 4), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 29, yPosition * 4), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 27, yPosition * 3), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 28, yPosition * 3), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 29, yPosition * 3), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 27, yPosition * 2), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 28, yPosition * 2), 
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 29, yPosition * 2),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 28, yPosition * 1),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 29, yPosition * 1),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 28, yPosition * 0),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 29, yPosition * 0),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 27, yPosition * 0),
+                                            CropImg(terrainAssets, widthAsset, heightAsset, xPosition * 27, yPosition * 1) };
+        }
+        private static Bitmap CropImg(Bitmap img, int width, int height, int xPosition, int yPosition)
+        {
+            Rectangle sectionCrop = new Rectangle(xPosition, yPosition, width, height);
+
+            Bitmap asset = new Bitmap(width, height);
+
+            Graphics g = Graphics.FromImage(asset);
+
+            g.DrawImage(img, 0, 0, sectionCrop, GraphicsUnit.Pixel);
+
+            return asset;
         }
     }
 }

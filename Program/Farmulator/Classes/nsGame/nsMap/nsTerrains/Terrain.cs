@@ -53,7 +53,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
             {
                 Ranch ranch = (Ranch)build;
 
-                Ranch newRanch = new Ranch(ranch.GetName(), ranch.GetBuyPrice(), ranch.GetSellPrice(), ranch.GetHealth(), ranch.GetWater(), ranch.GetMaturity(), ranch.GetFinalProduction(), ranch.GetDisease(), ranch.GetAnimal(), ranch.GetFood(), ranch.GetAnimal().GetUnits() * earthCounter);
+                Ranch newRanch = new Ranch(ranch.GetImg(), ranch.GetName(), ranch.GetBuyPrice(), ranch.GetSellPrice(), ranch.GetHealth(), ranch.GetWater(), ranch.GetMaturity(), ranch.GetFinalProduction(), ranch.GetDisease(), ranch.GetAnimal(), ranch.GetFood(), ranch.GetAnimal().GetUnits() * earthCounter);
 
                 this.build = newRanch;
             }
@@ -62,7 +62,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
             {
                 Land land = (Land)build;
 
-                Land newLand = new Land(land.GetName(), land.GetBuyPrice(), land.GetSellPrice(), land.GetHealth(), land.GetWater(), land.GetMaturity(), land.GetFinalProduction(), land.GetDisease(), land.GetSeed(), land.GetNutrients(), land.GetWorms(), land.GetUndergrowth());
+                Land newLand = new Land(land.GetImg(), land.GetName(), land.GetBuyPrice(), land.GetSellPrice(), land.GetHealth(), land.GetWater(), land.GetMaturity(), land.GetFinalProduction(), land.GetDisease(), land.GetSeed(), land.GetNutrients(), land.GetWorms(), land.GetUndergrowth());
 
                 this.build = newLand;
             }
@@ -71,7 +71,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
             {
                 Storage storage = (Storage)build;
 
-                Storage newStorage = new Storage(storage.GetName(), storage.GetBuyPrice(), storage.GetSellPrice(), storage.GetMaxCapacity());
+                Storage newStorage = new Storage(storage.GetImg(), storage.GetName(), storage.GetBuyPrice(), storage.GetSellPrice(), storage.GetMaxCapacity());
 
                 this.build = newStorage;
             }
@@ -89,7 +89,7 @@ namespace Farmulator.Classes.nsGame.nsMap.nsTerrains
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    this.blocks[i, j] = new Earth();
+                    this.blocks[i, j] = new Earth(0, 0 , 0);
                 }
             }
         }

@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing;
 
 namespace Farmulator.Classes.nsGame
 {
@@ -32,11 +33,11 @@ namespace Farmulator.Classes.nsGame
         private List<Consumable> consumables;
 
         //CONSTRUCTOR
-        public Game()
+        public Game(int temperature,int rainfall)
         {
             this.turn = 1;
             this.money = 500000;
-            this.map = new Map();
+            this.map = new Map(temperature,rainfall);
             this.market = new Market();
             this.creationDate = DateTime.Now;
             this.saveDate = DateTime.Now;
@@ -91,42 +92,69 @@ namespace Farmulator.Classes.nsGame
             Seed tomato = new Seed("Tomates", 3, 20, 2, 2, 10, 3, 5, 25, 3, 2, 1, 12, 5, 10);
             products.Add(tomato);
 
-            Land tomatoLand = new Land("Granja de Tomates", 1500, 500, 100, 100, 0, 1, false, tomato, 100, false, false);
+            Bitmap tomatoImg = new Bitmap("../../Resources/Assets/tomato.gif");
+            Land tomatoLand = new Land(tomatoImg, "Granja de Tomates", 1500, 500, 100, 100, 0, 1, false, tomato, 100, false, false);
             this.builds.Add(tomatoLand);
 
-            Land maizLand = new Land("Granja de Maiz", 1500, 500, 100, 100, 0, 1, false, maiz, 100, false, false);
+            Bitmap cornImg = new Bitmap("../../Resources/Assets/corn.gif");
+            Land maizLand = new Land(cornImg, "Granja de Maiz", 1500, 500, 100, 100, 0, 1, false, maiz, 100, false, false);
             this.builds.Add(maizLand);
 
             int[] range = { 2, 4 };
             Animal pig = new Animal("Cerdo", 3, 20, 2, 15, 10, 3, 5, 25, 3, 15, range, 12, range, 10);
             products.Add(pig);
             
-            Ranch pigRanch = new Ranch("Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1, false, pig, 100, 0);
+            Bitmap pigImg = new Bitmap("../../Resources/Assets/pig.gif");
+            Ranch pigRanch = new Ranch(pigImg ,"Rancho de Cerdos", 2500, 1200, 100, 100, 0, 1, false, pig, 100, 0);
             this.builds.Add(pigRanch);
 
             this.market.PriceMarketProduct(this.products);
 
-            Storage storage = new Storage("Almacen Grande",3000,500,360);
+            Bitmap bigStorageImg = new Bitmap("../../Resources/Assets/storage.gif");
+            Storage bigStorage = new Storage(bigStorageImg, "Almacen Grande", 3000, 500, 360);
 
-            this.builds.Add(storage);
+            Bitmap mediumStorageImg = new Bitmap("../../Resources/Assets/medium_storage.gif");
+            Storage mediumStorage = new Storage(mediumStorageImg, "Almacen Mediano", 2000, 500, 200);
+
+            Bitmap smallStorageImg = new Bitmap("../../Resources/Assets/small_storage.gif");
+            Storage smallStorage = new Storage(smallStorageImg, "Almacen Pequeño", 1500, 500, 100);
+
+            this.builds.Add(bigStorage);
+            this.builds.Add(mediumStorage);
+            this.builds.Add(smallStorage);
 
             //GENERAMOS TODOS LOS CONSUMIBLES
 
-            AnimalWater waterAnimal = new AnimalWater("Agua para animales","Rellena el nivel de agua de los animales");
+            Bitmap animalWaterImg = new Bitmap("../../Resources/Assets/animal_water.gif");
+            AnimalWater waterAnimal = new AnimalWater(animalWaterImg,"Agua para animales","Rellena el nivel de agua de los animales");
             this.consumables.Add(waterAnimal);
-            AnimalFood foodAnimal = new AnimalFood("Comida para animales", "Rellena el nivel de comida para los animales");
+
+            Bitmap AnimalFoodImg = new Bitmap("../../Resources/Assets/animal_food.gif");
+            AnimalFood foodAnimal = new AnimalFood(AnimalFoodImg,"Comida para animales", "Rellena el nivel de comida para los animales");
             this.consumables.Add(foodAnimal);
-            Irrigation irrigation = new Irrigation("Riego para plantaciones", "Rellena el nivel de agua de una plantacion");
+
+            Bitmap IrrigationImg = new Bitmap("../../Resources/Assets/irrigation.gif");
+            Irrigation irrigation = new Irrigation(IrrigationImg,"Riego para plantaciones", "Rellena el nivel de agua de una plantacion");
             this.consumables.Add(irrigation);
-            Fertilizer fertilizer = new Fertilizer("Fertilizante para plantaciones", "Rellena el nivel de nutrientes de una plantacion");
+
+            Bitmap FertilizerImg = new Bitmap("../../Resources/Assets/fertilizer.gif");
+            Fertilizer fertilizer = new Fertilizer(FertilizerImg,"Fertilizante para plantaciones", "Rellena el nivel de nutrientes de una plantacion");
             this.consumables.Add(fertilizer);
-            Vaccine vaccine = new Vaccine("Vacuna para animales", "Cura para la enfermedad de un rancho");
+
+            Bitmap VaccineImg = new Bitmap("../../Resources/Assets/vaccine.gif");
+            Vaccine vaccine = new Vaccine(VaccineImg,"Vacuna para animales", "Cura para la enfermedad de un rancho");
             this.consumables.Add(vaccine);
-            Pesticide pesticide = new Pesticide("Pesticida para plantaciones", "Cura las plagas de gusanos de una plantacion");
+
+            Bitmap PesticideImg = new Bitmap("../../Resources/Assets/pesticide.gif");
+            Pesticide pesticide = new Pesticide(PesticideImg,"Pesticida para plantaciones", "Cura las plagas de gusanos de una plantacion");
             this.consumables.Add(pesticide);
-            Fungicide fungicide = new Fungicide("Fungicida para plantaciones", "Cura los hongos de una plantacion");
+
+            Bitmap FungicideImg = new Bitmap("../../Resources/Assets/fungicide.gif");
+            Fungicide fungicide = new Fungicide(FungicideImg,"Fungicida para plantaciones", "Cura los hongos de una plantacion");
             this.consumables.Add(fungicide);
-            Herbicide herbicide = new Herbicide("Herbicida para plantaciones", "Cura las malezas de una plantacion");
+
+            Bitmap HerbicideImg = new Bitmap("../../Resources/Assets/herbicide.gif");
+            Herbicide herbicide = new Herbicide(HerbicideImg,"Herbicida para plantaciones", "Cura las malezas de una plantacion");
             this.consumables.Add(herbicide);
 
 

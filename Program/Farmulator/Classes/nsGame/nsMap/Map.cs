@@ -19,7 +19,7 @@ namespace Farmulator.Classes.nsGame.nsMap
         private Farm farm;
 
         //CONSTRUCTOR
-        public Map()
+        public Map(int temperature, int rainfall)
         {
             this.terrains = new Terrain[10, 10];
             GenerateTerrains();
@@ -51,10 +51,10 @@ namespace Farmulator.Classes.nsGame.nsMap
         }
 
         //METODOS
-        public void GenerateMap(int lake, int river,int farm)
+        public void GenerateMap(int lake, int river, int temperature, int rainfall)
         {
             //RESETEAMOS MAPA
-            ResetMap();
+            ResetMap(temperature, rainfall);
 
             if(lake == 0)
             {
@@ -84,21 +84,8 @@ namespace Farmulator.Classes.nsGame.nsMap
 
             }
 
-            if(farm == 1)
-            {
-                this.farm.GetTerrains().Clear();
-                this.farm.GenerateFarm(this.terrains);
-            }
-
-            if (lake == 2 && this.lake != null)
-            {
-                InsertAssets(this.lake.GetPositions());
-            }
-
-            if(river == 2 && this.river != null)
-            {
-                InsertAssets(this.river.GetPositions(), this.river.GetDirection());
-            }
+            this.farm.GetTerrains().Clear();
+            this.farm.GenerateFarm(this.terrains);
 
             return;
 
@@ -115,21 +102,46 @@ namespace Farmulator.Classes.nsGame.nsMap
             }
         }
 
-        private void ResetMap()
+        private void ResetMap(int temperature, int rainfall)
         {
-            for(int i = 0; i < 10; i++)
+            Block[,] blockMap = new Block[100, 100];
+
+            //CREAMOS EL MAPA SOLO DE BLOQUES
+            for (int i = 0; i < 100; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 100; j++)
                 {
-                    for (int x = 0; x < 10; x++)
+
+                    if (this.terrains[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Water)))
                     {
-                        for (int y = 0; y < 10; y++)
-                        {
-                            this.terrains[i, j].GetBlocks()[x,y] = new Earth();
-                        }
+                        Water water = (Water)terrains[i / 10, j / 10].GetBlocks()[i % 10, j % 10];
+                        blockMap[i, j] = water;
+                    }
+
+                    if (this.terrains[i / 10, j / 10].GetBlocks()[i % 10, j % 10].GetType().Equals(typeof(Earth)))
+                    {
+                        Earth earth = (Earth)terrains[i / 10, j / 10].GetBlocks()[i % 10, j % 10];
+                        blockMap[i, j] = earth;
+
                     }
                 }
             }
+
+            float[][] perlinNoiseAltitude = PerlinNoise.GenerateWhiteNoise(100,100);
+
+            float[][] mapAltitude = PerlinNoise.GenerateSmoothNoise(perlinNoiseAltitude, 6);
+
+            for (int y = 0; y < 100; y++)
+            {
+
+                for(int x = 0; x < 100; x++)
+                {
+                    this.terrains[y / 10, x / 10].GetBlocks()[y % 10, x % 10] = new Earth(mapAltitude[y][x], temperature, rainfall);
+
+                } 
+            }
+
+            return;
 
         }
 
